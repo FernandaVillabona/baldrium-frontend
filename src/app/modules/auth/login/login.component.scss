@@ -1,0 +1,527 @@
+// ════════════════════════════════════════════════════
+//  BALDRIUM — Login Component
+//  Responsive: Mobile (<800) · Tablet (800-1279) · Desktop (≥1280)
+// ════════════════════════════════════════════════════
+
+// ── Tokens de diseño ─────────────────────────────────
+$navy-900:    #0B1622;
+$navy-800:    #0F1D2E;
+$navy-700:    #152338;
+$navy-600:    #1A2B44;
+$navy-500:    #1E3252;
+
+$gold-400:    #D4AF6A;
+$gold-500:    #C9A84C;
+$gold-600:    #B8943A;
+$gold-dark:   #8B6914;
+
+$white:       #FFFFFF;
+$off-white:   #F6F6F6;
+$input-bg:    #F0F0F0;
+$border-soft: #E2E2E2;
+
+$text-900:    #1A1A1A;
+$text-600:    #555555;
+$text-400:    #888888;
+$text-300:    #BBBBBB;
+
+$danger:      #C0392B;
+$danger-bg:   rgba(192, 57, 43, 0.08);
+$danger-bdr:  rgba(192, 57, 43, 0.25);
+
+$font-display: 'Raleway', 'Trebuchet MS', sans-serif;
+$font-body:    'DM Sans', 'Segoe UI', sans-serif;
+
+$radius-card: 14px;
+$radius-inp:  8px;
+
+// ── Mixins de breakpoint ──────────────────────────────
+@mixin tablet  { @media (min-width: 800px) and (max-width: 1279px) { @content; } }
+@mixin desktop { @media (min-width: 1280px) { @content; } }
+@mixin mobile  { @media (max-width: 799px)  { @content; } }
+
+// ════════════════════════════════════════════════════
+//  LAYOUT RAÍZ
+// ════════════════════════════════════════════════════
+.login-wrapper {
+  display:    flex;
+  min-height: 100vh;
+  height:     100vh;       
+  font-family: $font-body;
+
+  @include mobile {
+    height:     auto;       
+    min-height: 100vh;
+    flex-direction: column;
+    background: $navy-800;
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  PANEL IZQUIERDO — Branding
+// ════════════════════════════════════════════════════
+.brand-panel {
+  position:   relative;
+  overflow:   hidden;
+  display:    flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;            // ← agrega esto
+
+  width: 50%;
+  height: 100%;              // ← agrega esto
+
+  background: linear-gradient(
+    170deg,
+    $navy-900  0%,
+    $navy-700 55%,
+    $navy-600 100%
+  );
+
+  @include tablet { width: 38%; }
+  @include mobile { display: none; }
+}
+
+.brand-content {
+  position: relative;
+  z-index:  2;
+  text-align: center;
+  padding: 48px 32px;
+  animation: fadeInUp 0.7s ease both;
+}
+
+.logo-wrap {
+  margin-bottom: 28px;
+}
+
+.logo-img {
+  width:      380px;      
+  height:     auto;
+  object-fit: contain;
+  filter:     drop-shadow(0 4px 24px rgba(0, 0, 0, 0.4));
+
+  @include tablet { width: 160px; }
+}
+
+.brand-name {
+  font-family:  $font-display;
+  font-size:    38px;
+  font-weight:  700;
+  color:        $white;
+  letter-spacing: 10px;
+  margin:       0;
+  line-height:  1;
+
+  @include tablet {
+    font-size:     26px;
+    letter-spacing: 7px;
+  }
+}
+
+.brand-tagline {
+  font-family:  $font-display;
+  font-size:    13px;
+  font-weight:  400;
+  color:        rgba(255, 255, 255, 0.45);
+  letter-spacing: 6px;
+  margin:       10px 0 0;
+  text-transform: uppercase;
+
+  @include tablet {
+    font-size:     11px;
+    letter-spacing: 4px;
+  }
+}
+
+// Efecto de luz radial difusa
+.brand-glow {
+  position: absolute;
+  inset:    0;
+  z-index:  1;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    rgba(201, 168, 76, 0.07) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+// ════════════════════════════════════════════════════
+//  MOBILE HEADER (solo < 800px)
+// ════════════════════════════════════════════════════
+.mobile-header {
+  display: none;
+
+  @include mobile {
+    display:         flex;
+    justify-content: center;   // ← centrado
+    align-items:     center;
+    padding:         28px 20px 0;
+    animation:       fadeInDown 0.5s ease both;
+  }
+}
+
+.mobile-logo {
+  width:  140px;          
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.mobile-brand-text {
+  display:        flex;
+  flex-direction: column;
+}
+
+.mobile-name {
+  font-family:    $font-display;
+  font-size:      15px;
+  font-weight:    700;
+  color:          $white;
+  letter-spacing: 4px;
+}
+
+.mobile-sub {
+  font-family:    $font-display;
+  font-size:      9px;
+  font-weight:    400;
+  color:          rgba(255, 255, 255, 0.45);
+  letter-spacing: 3px;
+}
+
+// ════════════════════════════════════════════════════
+//  PANEL DERECHO — Formulario
+// ════════════════════════════════════════════════════
+.form-panel {
+  flex:            1;
+  height:          100%;     // ← agrega esto
+  overflow-y:      auto;     // ← scroll interno si el contenido crece
+  background:      $off-white;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  padding:         48px 40px;
+
+  @include tablet { padding: 40px 28px; }
+
+  @include mobile {
+    background:      $navy-800;
+    justify-content: flex-start;
+    padding:         20px 20px 48px;
+    height:          auto;
+    overflow-y:      visible;
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  CARD DEL FORMULARIO
+// ════════════════════════════════════════════════════
+.form-card {
+  width:      100%;
+  max-width:  400px;
+  background: $white;
+  border-radius: $radius-card;
+  padding:    44px 40px 36px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
+  animation:  fadeInUp 0.5s ease both;
+  animation-delay: 0.1s;
+
+  @include tablet {
+    max-width: 360px;
+    padding:   36px 30px 28px;
+  }
+
+  @include mobile {
+    max-width:     100%;
+    padding:       28px 24px 24px;
+    margin-top:    20px;
+    border-radius: 12px;
+    box-shadow:    0 8px 40px rgba(0, 0, 0, 0.35);
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  CABECERA DEL FORMULARIO
+// ════════════════════════════════════════════════════
+.form-header {
+  margin-bottom: 28px;
+
+  h2 {
+    font-family:    $font-display;
+    font-size:      28px;
+    font-weight:    600;
+    color:          $text-900;
+    margin:         0 0 10px;
+    letter-spacing: -0.3px;
+
+    @include mobile { font-size: 24px; }
+  }
+
+  p {
+    font-size:   13.5px;
+    color:       $text-600;
+    line-height: 1.6;
+    margin:      0;
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  ALERTA DE ERROR
+// ════════════════════════════════════════════════════
+.alert-error {
+  display:       flex;
+  align-items:   center;
+  gap:           9px;
+  background:    $danger-bg;
+  border:        1px solid $danger-bdr;
+  border-radius: 8px;
+  padding:       10px 14px;
+  font-size:     13px;
+  color:         $danger;
+  margin-bottom: 20px;
+  animation:     shake 0.35s ease;
+
+  svg { flex-shrink: 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-5px); }
+  75%       { transform: translateX(5px); }
+}
+
+// ════════════════════════════════════════════════════
+//  GRUPOS DE CAMPO
+// ════════════════════════════════════════════════════
+.field-group {
+  margin-bottom: 20px;
+
+  label {
+    display:        block;
+    font-size:      10.5px;
+    font-weight:    600;
+    color:          $text-600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom:  7px;
+  }
+
+  // Estado error visual
+  &.field-error {
+    .input-wrap input {
+      border-color: rgba(192, 57, 43, 0.4);
+      background:   rgba(192, 57, 43, 0.03);
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  INPUTS
+// ════════════════════════════════════════════════════
+.input-wrap {
+  position:    relative;
+  display:     flex;
+  align-items: center;
+}
+
+.input-icon {
+  position:       absolute;
+  left:           14px;
+  color:          $text-300;
+  pointer-events: none;
+  transition:     color 0.2s;
+  flex-shrink:    0;
+}
+
+// Cuando el campo tiene foco, el icono toma color dorado
+.field-group:focus-within .input-icon {
+  color: $gold-500;
+}
+
+.input-wrap input {
+  width:       100%;
+  padding:     13px 44px;
+  background:  $input-bg;
+  border:      1.5px solid transparent;
+  border-radius: $radius-inp;
+  color:       $text-900;
+  font-family: $font-body;
+  font-size:   14px;
+  outline:     none;
+  transition:  border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  box-sizing:  border-box;
+
+  &::placeholder { color: $text-300; }
+
+  &:focus {
+    border-color: $gold-500;
+    background:   $white;
+    box-shadow:   0 0 0 3px rgba(201, 168, 76, 0.13);
+  }
+
+  // Fix autofill de Chrome
+  &:-webkit-autofill {
+    -webkit-box-shadow:      0 0 0 1000px $input-bg inset;
+    -webkit-text-fill-color: $text-900;
+  }
+}
+
+// ── Botón mostrar/ocultar contraseña ─────────────────
+.btn-toggle-pass {
+  position:    absolute;
+  right:       12px;
+  background:  none;
+  border:      none;
+  cursor:      pointer;
+  color:       $text-400;
+  display:     flex;
+  align-items: center;
+  padding:     4px;
+  border-radius: 4px;
+  transition:  color 0.2s;
+  line-height: 0;
+
+  &:hover { color: $text-600; }
+}
+
+// ── Hint de validación ────────────────────────────────
+.field-hint {
+  display:     block;
+  margin-top:  5px;
+  font-size:   11.5px;
+  color:       $danger;
+  animation:   fadeIn 0.2s ease;
+}
+
+// ════════════════════════════════════════════════════
+//  BOTÓN INGRESAR
+// ════════════════════════════════════════════════════
+.btn-login {
+  width:          100%;
+  margin-top:     10px;
+  padding:        15px;
+  background:     $gold-400;
+  border:         none;
+  border-radius:  $radius-inp;
+  color:          $white;
+  font-family:    $font-display;
+  font-size:      13px;
+  font-weight:    700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  cursor:         pointer;
+  transition:     background 0.25s, transform 0.2s, box-shadow 0.25s;
+  position:       relative;
+  overflow:       hidden;
+
+  &:hover:not(:disabled) {
+    background:  $gold-600;
+    transform:   translateY(-1px);
+    box-shadow:  0 5px 18px rgba(180, 140, 50, 0.35);
+  }
+
+  &:active:not(:disabled) {
+    transform:   translateY(0);
+    box-shadow:  none;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor:  not-allowed;
+  }
+
+  &.is-loading { pointer-events: none; }
+}
+
+.spinner-wrap {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             10px;
+}
+
+.spinner {
+  width:         15px;
+  height:        15px;
+  border:        2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: $white;
+  border-radius: 50%;
+  animation:     spin 0.65s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ════════════════════════════════════════════════════
+//  LINKS Y FOOTER
+// ════════════════════════════════════════════════════
+.forgot-link {
+  text-align:  center;
+  margin-top:  18px;
+  font-size:   13px;
+  color:       $text-400;
+  cursor:      pointer;
+  transition:  color 0.2s;
+  user-select: none;
+
+  &:hover { color: $gold-500; }
+}
+
+.security-footer {
+  margin-top:     36px;
+  text-align:     center;
+  font-size:      9px;
+  letter-spacing: 1.5px;
+  color:          #C8C8C8;
+  text-transform: uppercase;
+  line-height:    1.6;
+}
+
+// ════════════════════════════════════════════════════
+//  ANIMACIONES DE ENTRADA
+// ════════════════════════════════════════════════════
+@keyframes fadeInUp {
+  from {
+    opacity:   0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity:   0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+
+// ← ESTO ES LO QUE FALTA
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height:  100%;
+  margin:  0;
+  padding: 0;
+  overflow-x: hidden;
+}
