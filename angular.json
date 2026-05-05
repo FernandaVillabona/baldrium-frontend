@@ -20,6 +20,10 @@
             "outputPath": "dist/baldrium-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            
+            "stylePreprocessorOptions": {
+    "includePaths": ["src"]
+            },
             "polyfills": [
               "zone.js"
             ],
@@ -36,6 +40,7 @@
               "src/styles.scss"
             ],
             "scripts": []
+            
           },
           "configurations": {
             "production": {

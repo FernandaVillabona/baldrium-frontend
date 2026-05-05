@@ -1,0 +1,424 @@
+@import 'assets/styles/tokens';
+
+// ══════════════════════════════════════════════════════════════════
+//  PAGE
+// ══════════════════════════════════════════════════════════════════
+
+.page-perfil {
+  display:        flex;
+  flex-direction: column;
+  gap:            24px;
+  animation:      fadeInLeft 0.3s ease;
+}
+
+// ── Header — igual que otras páginas ─────────────────────────────
+.page-header {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             16px;
+  flex-wrap:       wrap;
+
+  h1 {
+    font-family: $font-display;
+    font-size:   32px;
+    font-weight: 800;
+    color:       #0F1923;
+    margin:      0 0 6px;
+  }
+
+  p {
+    font-size:   14px;
+    color:       #555770;
+    margin:      0;
+    font-weight: 500;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  IDENTIDAD CARD
+// ══════════════════════════════════════════════════════════════════
+
+.identidad-card {
+  display:       flex;
+  align-items:   center;
+  gap:           20px;
+  background:    $navy-800;
+  border-radius: $radius-lg;
+  padding:       24px 28px;
+  position:      relative;
+  overflow:      hidden;
+
+  &::before {
+    content:       '';
+    position:      absolute;
+    top: -50px; right: -30px;
+    width:         200px; height: 200px;
+    border-radius: 50%;
+    background:    rgba($gold, .07);
+    pointer-events: none;
+  }
+}
+
+.identidad-avatar {
+  flex-shrink: 0;
+
+  .avatar-initials {
+    width:           64px;
+    height:          64px;
+    border-radius:   50%;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    font-family:     $font-display;
+    font-weight:     800;
+    font-size:       1.3rem;
+    color:           $white;
+    box-shadow:      0 4px 16px rgba(0,0,0,.25);
+  }
+}
+
+.identidad-body { flex: 1; min-width: 0; }
+
+.identidad-nombre {
+  font-family:  $font-display;
+  font-size:    1.25rem;
+  font-weight:  800;
+  color:        $white;
+  margin:       0 0 6px;
+  letter-spacing: -.3px;
+}
+
+.identidad-meta {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  flex-wrap:   wrap;
+  margin-bottom: 12px;
+}
+
+.identidad-meta-item {
+  display:     flex;
+  align-items: center;
+  gap:         5px;
+  font-size:   12px;
+  color:       rgba($white, .50);
+
+  svg { opacity: .7; }
+}
+
+.identidad-sep { color: rgba($white, .25); font-size: 12px; }
+
+.identidad-roles {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       6px;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  BADGES ROL
+// ══════════════════════════════════════════════════════════════════
+
+.badge-rol {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        3px 10px;
+  border-radius:  $radius-full;
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+
+  &.badge-rol-director    { background: rgba($gold, .20);        color: darken($gold, 18%); }
+  &.badge-rol-coordinador { background: rgba(#2980B9, .18);      color: #1A5276; }
+  &.badge-rol-asesor      { background: rgba(#27AE60, .15);      color: #1E8449; }
+  &.badge-rol-tele        { background: rgba(#8E44AD, .15);      color: #6C3483; }
+  &.badge-rol-auxiliar    { background: rgba(#E67E22, .15);      color: #A04000; }
+  &.badge-rol-default     { background: rgba(#95A5A6, .15);      color: #616A6B; }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  GRID Y CARDS
+// ══════════════════════════════════════════════════════════════════
+
+.perfil-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   24px;
+
+  @media (max-width: 800px) { grid-template-columns: 1fr; }
+}
+
+// ── Card section — mismo estilo que usuarios ──────────────────────
+.card-section {
+  background:    $card-bg;
+  border-radius: $radius-lg;
+  border:        1px solid #D8DAE8;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.04),
+    0 6px 16px rgba(0,0,0,.07),
+    0 16px 32px rgba(0,0,0,.05);
+  overflow:      hidden;
+  display:       flex;
+  flex-direction: column;
+  transition:    box-shadow 0.2s;
+
+  &:hover {
+    box-shadow:
+      0 4px 8px rgba(0,0,0,.06),
+      0 12px 24px rgba(0,0,0,.10),
+      0 24px 48px rgba(0,0,0,.07);
+  }
+}
+
+// ── Section header — idéntico al de usuarios ─────────────────────
+.section-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         14px 20px;
+  background:      $navy-800;
+  gap:             12px;
+
+  h2 {
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    font-family: $font-display;
+    font-size:   14px;
+    font-weight: 700;
+    color:       rgba($white, .90);
+    margin:      0;
+    white-space: nowrap;
+
+    svg { opacity: .75; }
+  }
+}
+
+// ── Cuerpo del formulario ─────────────────────────────────────────
+.perfil-form-body {
+  padding: 20px 20px 4px;
+  flex:    1;
+}
+
+.pass-hint {
+  font-size:   12.5px;
+  color:       $text-muted;
+  margin:      0 0 16px;
+  line-height: 1.55;
+}
+
+// ── Grid formulario ───────────────────────────────────────────────
+.form-grid-perfil {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   14px;
+  margin-bottom:         16px;
+
+  .form-group-full { grid-column: 1 / -1; }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    .form-group-full { grid-column: 1; }
+  }
+}
+
+.form-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            5px;
+}
+
+.form-label-perfil {
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: .7px;
+  color:          $text-muted;
+  text-transform: uppercase;
+}
+
+.req { color: $danger; margin-left: 2px; }
+.opt {
+  font-weight:    400;
+  text-transform: none;
+  font-size:      10px;
+  color:          $text-muted;
+  margin-left:    4px;
+}
+
+.form-input-perfil {
+  height:        38px;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  padding:       0 12px;
+  font-family:   $font-body;
+  font-size:     13.5px;
+  color:         $text-primary;
+  background:    $white;
+  outline:       none;
+  width:         100%;
+  box-sizing:    border-box;
+  transition:    border-color .15s, box-shadow .15s;
+
+  &::placeholder { color: #C0C4D8; }
+
+  &:focus {
+    border-color: $gold;
+    box-shadow:   0 0 0 3px rgba($gold, .12);
+  }
+
+  &.input-match   { border-color: #27AE60 !important; }
+  &.input-nomatch { border-color: $danger  !important; }
+}
+
+// ── Password input ────────────────────────────────────────────────
+.input-pass-wrap {
+  position: relative;
+
+  .form-input-perfil { padding-right: 38px; }
+}
+
+.btn-eye {
+  position:   absolute;
+  right:      10px;
+  top:        50%;
+  transform:  translateY(-50%);
+  background: none;
+  border:     none;
+  cursor:     pointer;
+  padding:    2px;
+  color:      $text-muted;
+  display:    flex;
+  align-items: center;
+
+  &:hover { color: $navy-800; }
+}
+
+.match-hint {
+  font-size:   11px;
+  font-weight: 600;
+  margin-top:  2px;
+
+  &.ok { color: #27AE60; }
+  &.no { color: $danger;  }
+}
+
+// ── Status mensajes ───────────────────────────────────────────────
+.status-inline {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  padding:       10px 14px;
+  border-radius: $radius-md;
+  font-size:     13px;
+  font-weight:   600;
+  margin-bottom: 12px;
+
+  &.status-ok {
+    background: rgba(#27AE60, .08);
+    color:      #1E8449;
+    border:     1px solid rgba(#27AE60, .20);
+  }
+
+  &.status-err {
+    background: rgba($danger, .08);
+    color:      darken($danger, 10%);
+    border:     1px solid rgba($danger, .20);
+  }
+}
+
+// ── Card footers ──────────────────────────────────────────────────
+.card-footer-perfil {
+  padding:        14px 20px;
+  border-top:     1px solid #D0D3E0;
+  background:     #F0F2F8;
+  display:        flex;
+  justify-content: flex-end;
+  margin-top:     auto;
+}
+
+// ── Botón primary (navy) igual que el de otras páginas ───────────
+.btn-accion-primary {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        10px 20px;
+  background:     $navy-800;
+  border:         none;
+  border-radius:  $radius-md;
+  color:          $white;
+  font-family:    $font-display;
+  font-size:      11px;
+  font-weight:    700;
+  letter-spacing: 1px;
+  cursor:         pointer;
+  transition:     all 0.2s;
+  box-shadow:     0 4px 14px rgba(0,0,0,.20);
+
+  &:hover:not(:disabled) {
+    background:  $navy-600;
+    box-shadow:  0 6px 20px rgba(0,0,0,.30);
+  }
+
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+// ── Botón gold (contraseña) ───────────────────────────────────────
+.btn-accion-gold {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        10px 20px;
+  background:     linear-gradient(135deg, $gold 0%, $gold-dark 100%);
+  border:         none;
+  border-radius:  $radius-md;
+  color:          $white;
+  font-family:    $font-display;
+  font-size:      11px;
+  font-weight:    700;
+  letter-spacing: 1px;
+  cursor:         pointer;
+  transition:     all 0.25s;
+  box-shadow:     0 4px 14px rgba($gold, .30);
+
+  &:hover:not(:disabled) {
+    transform:   translateY(-1px);
+    box-shadow:  0 6px 20px rgba($gold, .45);
+    background:  linear-gradient(135deg, $gold-light 0%, $gold 100%);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); }
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+// ── Spinner ───────────────────────────────────────────────────────
+.spinner {
+  display:       inline-block;
+  width:         15px;
+  height:        15px;
+  border:        2px solid rgba($white, .3);
+  border-top-color: $white;
+  border-radius: 50%;
+  animation:     spin .7s linear infinite;
+}
+
+.spinner-dark {
+  border-color:     rgba($navy-800, .2);
+  border-top-color: $navy-800;
+}
+
+// ── Loading ───────────────────────────────────────────────────────
+.table-loading {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  padding:     40px 20px;
+  color:       $text-muted;
+  font-size:   14px;
+}
+
+@keyframes spin        { to { transform: rotate(360deg); } }
+@keyframes fadeInLeft  {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}

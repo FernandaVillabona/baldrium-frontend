@@ -1,0 +1,485 @@
+@import 'assets/styles/tokens';
+
+// ════════════════════════════════════════════════════════════════════
+//  PAGE
+// ════════════════════════════════════════════════════════════════════
+
+.page-compras {
+  display:        flex;
+  flex-direction: column;
+  gap:            24px;
+  background:     linear-gradient(180deg, #EDEEF3 0%, #F2F4F7 100%);
+  min-height:     100%;
+  padding:        4px;
+  animation:      fadeInLeft 0.3s ease;
+}
+
+// ── Header ────────────────────────────────────────────────────────
+.page-header {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             16px;
+  flex-wrap:       wrap;
+
+  h1 {
+    font-family: $font-display;
+    font-size:   32px;
+    font-weight: 800;
+    color:       #0F1923;
+    margin:      0 0 6px;
+  }
+
+  p {
+    font-size:   14px;
+    color:       #555770;
+    margin:      0;
+    font-weight: 500;
+  }
+}
+
+.page-header-actions {
+  display:   flex;
+  gap:       10px;
+  flex-wrap: wrap;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  KPIs
+// ════════════════════════════════════════════════════════════════════
+
+.kpi-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   16px;
+  max-width:             600px;
+
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.kpi-card {
+  background:    #FFFFFF;
+  border-radius: $radius-lg;
+  border:        1px solid #D8DAE8;
+  box-shadow:    $shadow-sm;
+  padding:       20px;
+  display:       flex;
+  align-items:   center;
+  gap:           14px;
+  transition:    box-shadow 0.2s;
+
+  &:hover { box-shadow: $shadow-md; }
+}
+
+.kpi-icon {
+  width:           44px;
+  height:          44px;
+  border-radius:   $radius-md;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+
+  &-blue  { background: rgba(59,130,246,0.12); color: #3B82F6; }
+  &-green { background: rgba(39,174,96,0.12);  color: #27AE60; }
+}
+
+.kpi-info {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+}
+
+.kpi-value {
+  font-family: $font-display;
+  font-size:   22px;
+  font-weight: 800;
+  color:       #0F1923;
+  line-height: 1;
+
+  &-green { color: #27AE60; }
+}
+
+.kpi-label {
+  font-size:   12px;
+  color:       #555770;
+  font-weight: 500;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════════════════════════════
+
+.tabs-wrap {
+  display:       flex;
+  gap:           4px;
+  border-bottom: 2px solid #D0D3E0;
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            7px;
+  padding:        11px 18px;
+  background:     transparent;
+  border:         none;
+  border-bottom:  2px solid transparent;
+  margin-bottom:  -2px;
+  font-family:    $font-body;
+  font-size:      13px;
+  font-weight:    600;
+  color:          #6B7080;
+  cursor:         pointer;
+  transition:     all 0.2s;
+  white-space:    nowrap;
+
+  svg { opacity: 0.6; transition: opacity 0.2s; }
+
+  &:hover {
+    color: #0F1923;
+    svg { opacity: 1; }
+  }
+
+  &.active {
+    color:        $navy-800;
+    border-bottom-color: $gold;
+
+    svg { opacity: 1; stroke: $gold; }
+  }
+}
+
+.tab-count {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  background:      #E5E7F0;
+  color:           #555770;
+  border-radius:   $radius-full;
+  font-size:       10px;
+  font-weight:     700;
+  min-width:       20px;
+  height:          20px;
+  padding:         0 6px;
+
+  .active & {
+    background: rgba(201,168,76,0.15);
+    color:      $gold-dark;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  CARD SECTION
+// ════════════════════════════════════════════════════════════════════
+
+.card-section {
+  background:    $card-bg;
+  border-radius: $radius-lg;
+  border:        1px solid #D8DAE8;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 6px 16px rgba(0,0,0,0.07),
+    0 16px 32px rgba(0,0,0,0.05);
+  overflow:      hidden;
+  transition:    box-shadow 0.2s;
+  animation:     fadeInLeft 0.25s ease;
+
+  &:hover {
+    box-shadow:
+      0 4px 8px rgba(0,0,0,0.06),
+      0 12px 24px rgba(0,0,0,0.10),
+      0 24px 48px rgba(0,0,0,0.07);
+  }
+}
+
+// ── Section header ────────────────────────────────────────────────
+.section-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         14px 20px;
+  background:      $navy-800;
+  gap:             12px;
+  flex-wrap:       wrap;
+
+  h2 {
+    font-family:    $font-display;
+    font-size:      13px;
+    font-weight:    700;
+    color:          rgba(255,255,255,0.90);
+    margin:         0;
+    white-space:    nowrap;
+    display:        flex;
+    align-items:    center;
+    gap:            8px;
+    letter-spacing: 0.6px;
+  }
+}
+
+.dot-accent {
+  width:         7px;
+  height:        7px;
+  border-radius: 50%;
+  background:    $gold;
+  flex-shrink:   0;
+  display:       inline-block;
+}
+
+.section-header-right {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  flex-wrap:   wrap;
+}
+
+// ── Search ────────────────────────────────────────────────────────
+.search-wrap {
+  position:    relative;
+  display:     flex;
+  align-items: center;
+}
+
+.search-icon {
+  position:       absolute;
+  left:           10px;
+  color:          rgba(255,255,255,0.45);
+  pointer-events: none;
+}
+
+.search-input {
+  padding:       8px 32px 8px 34px;
+  background:    rgba(255,255,255,0.10);
+  border:        1.5px solid rgba(255,255,255,0.15);
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  color:         $white;
+  outline:       none;
+  width:         320px;
+  transition:    all 0.2s;
+
+  &::placeholder { color: rgba(255,255,255,0.40); }
+
+  &:focus {
+    border-color: $gold;
+    background:   rgba(255,255,255,0.15);
+    box-shadow:   0 0 0 3px rgba(201,168,76,0.20);
+  }
+
+  @media (max-width: 767px) { width: 200px; }
+}
+
+.search-clear {
+  position:      absolute;
+  right:         8px;
+  background:    transparent;
+  border:        none;
+  color:         rgba(255,255,255,0.50);
+  cursor:        pointer;
+  display:       flex;
+  align-items:   center;
+  padding:       2px;
+  border-radius: 3px;
+  transition:    color 0.15s;
+
+  &:hover { color: $white; }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  TABLA
+// ════════════════════════════════════════════════════════════════════
+
+.table-responsive { overflow-x: auto; }
+
+.table-loading {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  padding:     32px 20px;
+  color:       $text-muted;
+  font-size:   14px;
+}
+
+.alert-error-inline {
+  background:    rgba(231,76,60,0.08);
+  border:        1px solid rgba(231,76,60,0.2);
+  border-radius: $radius-md;
+  padding:       12px 16px;
+  font-size:     13px;
+  color:         $danger;
+  margin:        16px;
+}
+
+.tabla-baldrium {
+  width:           100%;
+  border-collapse: separate;
+  border-spacing:  0;
+
+  thead tr {
+    background: linear-gradient(180deg, #E8EAF2 0%, #DDDFE9 100%);
+
+    th {
+      padding:        13px 16px;
+      font-size:      11px;
+      font-weight:    800;
+      color:          #3A3D56;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      text-align:     left;
+      white-space:    nowrap;
+      border-bottom:  2px solid #C8CADE;
+      border-top:     1px solid #E0E2EE;
+
+      &:first-child { padding-left: 20px; }
+      &:last-child  { padding-right: 20px; }
+    }
+  }
+
+  tbody tr {
+    transition: all 0.15s;
+
+    &:nth-child(odd)  { background: #FFFFFF; }
+    &:nth-child(even) { background: #F5F6FA; }
+    &:last-child td   { border-bottom: none; }
+
+    &:hover {
+      background: #ECEEF8 !important;
+      box-shadow: inset 3px 0 0 $gold;
+    }
+
+    td {
+      padding:        14px 16px;
+      font-size:      13px;
+      color:          $text-primary;
+      vertical-align: middle;
+      border-bottom:  1px solid #E8EAF2;
+
+      &:first-child { padding-left: 20px; }
+      &:last-child  { padding-right: 20px; }
+    }
+  }
+}
+
+// ── User cell ─────────────────────────────────────────────────────
+.user-cell {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+}
+
+.user-cell-name {
+  font-size:   13.5px;
+  font-weight: 600;
+  color:       $text-primary;
+  white-space: nowrap;
+}
+
+// ── Celdas ────────────────────────────────────────────────────────
+.td-muted          { color: $text-muted; font-size: 12.5px; }
+.td-fecha          { color: $text-muted; font-size: 12px; white-space: nowrap; font-family: monospace; }
+.td-valor-green    { font-weight: 700; color: #27AE60; font-size: 13.5px; white-space: nowrap; }
+.td-productos-inline {
+  color:         $text-secondary;
+  font-size:     12.5px;
+  max-width:     260px;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Estado badge compra ───────────────────────────────────────────
+.estado-badge-compra {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        4px 11px;
+  border-radius:  $radius-full;
+  font-size:      10px;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space:    nowrap;
+
+  &.compra-pendiente { background: rgba(245,158,11,0.15); color: #D97706; }
+  &.compra-pagada    { background: rgba(39,174,96,0.15);  color: #27AE60; }
+}
+
+// ── Beneficio cell ─────────────────────────────────────────────────
+.beneficio-cell {
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+  font-size:   12px;
+  font-weight: 600;
+  color:       $text-muted;
+  white-space: nowrap;
+
+  svg { stroke: $text-muted; }
+
+  &.con-beneficio {
+    color: #27AE60;
+    svg { stroke: #27AE60; }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  EMPTY STATES
+// ════════════════════════════════════════════════════════════════════
+
+.empty-state {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            12px;
+  padding:        48px 20px;
+  color:          $text-muted;
+
+  svg { opacity: 0.3; }
+
+  p {
+    font-size:   14px;
+    font-weight: 500;
+    margin:      0;
+  }
+}
+
+.buscar-hint {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  padding:     28px 20px;
+  color:       $text-muted;
+  font-size:   13.5px;
+
+  svg { opacity: 0.5; }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  BTN NUEVA VENTA
+// ════════════════════════════════════════════════════════════════════
+
+.btn-accion-primary {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             8px;
+  padding:         11px 22px;
+  background:      linear-gradient(135deg, $gold 0%, $gold-dark 100%);
+  border:          none;
+  border-radius:   $radius-md;
+  color:           $white;
+  font-family:     $font-display;
+  font-size:       12px;
+  font-weight:     700;
+  letter-spacing:  1px;
+  cursor:          pointer;
+  transition:      all 0.25s;
+  box-shadow:      0 4px 14px rgba(201,168,76,0.30);
+  text-decoration: none;
+
+  &:hover {
+    transform:  translateY(-1px);
+    box-shadow: 0 6px 20px rgba(201,168,76,0.45);
+    background: linear-gradient(135deg, $gold-light 0%, $gold 100%);
+  }
+
+  &:active { transform: translateY(0); }
+}

@@ -1,0 +1,321 @@
+<div class="page-compras">
+
+  <!-- ── Header ──────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Compras</h1>
+      <p>Seguimiento de ventas registradas</p>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn-accion-primary" (click)="abrirNuevaVenta()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        NUEVA VENTA
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPIs ────────────────────────────────────────────────────── -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value">{{ cargandoKpi ? '—' : kpi.NumeroVentas }}</span>
+        <span class="kpi-label">Número de ventas del mes</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value kpi-value-green">{{ cargandoKpi ? '—' : formatearPesos(+kpi.ValorVentasConfirmadas) }}</span>
+        <span class="kpi-label">Valor ventas completadas del mes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabs ─────────────────────────────────────────────────────── -->
+  <div class="tabs-wrap">
+    <button class="tab-btn" [class.active]="tabActivo === 'semana'" (click)="cambiarTab('semana')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      Compras de la semana
+      <span class="tab-count" *ngIf="!cargando">{{ comprasSemana.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="tabActivo === 'mes'" (click)="cambiarTab('mes')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      Compras del mes
+      <span class="tab-count" *ngIf="!cargando">{{ comprasMes.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="tabActivo === 'buscar'" (click)="cambiarTab('buscar')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      Buscar compra
+    </button>
+  </div>
+
+  <!-- ── Tabla semana ──────────────────────────────────────────────── -->
+  <div class="card-section" *ngIf="tabActivo === 'semana'">
+    <div class="section-header">
+      <h2>
+        <span class="dot-accent"></span>
+        COMPRAS DE LA SEMANA
+      </h2>
+    </div>
+
+    <div class="table-loading" *ngIf="cargando">
+      <span class="spinner spinner-dark"></span> Cargando compras...
+    </div>
+    <div class="alert-error-inline" *ngIf="errorTabla && !cargando">{{ errorTabla }}</div>
+
+    <div class="table-responsive" *ngIf="!cargando && !errorTabla">
+      <table class="tabla-baldrium" *ngIf="comprasSemana.length > 0">
+        <thead>
+          <tr>
+            <th>CLIENTE</th>
+            <th>PRODUCTO</th>
+            <th>FECHA</th>
+            <th style="text-align:right">VALOR</th>
+            <th>ESTADO</th>
+            <th>BENEFICIO</th>
+            <th>FORMA DE PAGO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of comprasSemana">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-initials avatar-{{ getPrimeraLetra(c.NombreCliente) }}">
+                  {{ getIniciales(c.NombreCliente) }}
+                </div>
+                <span class="user-cell-name">{{ c.NombreCliente }}</span>
+              </div>
+            </td>
+            <td class="td-productos-inline" [title]="c.Productos">{{ c.Productos }}</td>
+            <td class="td-fecha">{{ formatearFecha(c.FechaCompra) }}</td>
+            <td style="text-align:right" class="td-valor-green">{{ formatearPesos(+c.TotalCompra) }}</td>
+            <td>
+              <span class="estado-badge-compra"
+                    [class.compra-pendiente]="c.EstadoCompra === 'Pendiente'"
+                    [class.compra-pagada]="c.EstadoCompra === 'Pagada' || c.EstadoCompra === 'Completada'">
+                {{ c.EstadoCompra }}
+              </span>
+            </td>
+            <td>
+              <span class="beneficio-cell" [class.con-beneficio]="c.EstadoBeneficio != null">
+                <svg *ngIf="c.EstadoBeneficio == null" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                <svg *ngIf="c.EstadoBeneficio != null" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ c.EstadoBeneficio != null ? 'Con beneficio' : 'Sin beneficio' }}
+              </span>
+            </td>
+            <td class="td-muted">{{ c.FormaPago }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="comprasSemana.length === 0">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <p>No hay compras registradas esta semana.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabla mes ──────────────────────────────────────────────────── -->
+  <div class="card-section" *ngIf="tabActivo === 'mes'">
+    <div class="section-header">
+      <h2>
+        <span class="dot-accent"></span>
+        COMPRAS DEL MES
+      </h2>
+    </div>
+
+    <div class="table-loading" *ngIf="cargando">
+      <span class="spinner spinner-dark"></span> Cargando compras...
+    </div>
+    <div class="alert-error-inline" *ngIf="errorTabla && !cargando">{{ errorTabla }}</div>
+
+    <div class="table-responsive" *ngIf="!cargando && !errorTabla">
+      <table class="tabla-baldrium" *ngIf="comprasMes.length > 0">
+        <thead>
+          <tr>
+            <th>CLIENTE</th>
+            <th>PRODUCTO</th>
+            <th>FECHA</th>
+            <th style="text-align:right">VALOR</th>
+            <th>ESTADO</th>
+            <th>BENEFICIO</th>
+            <th>FORMA DE PAGO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of comprasMes">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-initials avatar-{{ getPrimeraLetra(c.NombreCliente) }}">
+                  {{ getIniciales(c.NombreCliente) }}
+                </div>
+                <span class="user-cell-name">{{ c.NombreCliente }}</span>
+              </div>
+            </td>
+            <td class="td-productos-inline" [title]="c.Productos">{{ c.Productos }}</td>
+            <td class="td-fecha">{{ formatearFecha(c.FechaCompra) }}</td>
+            <td style="text-align:right" class="td-valor-green">{{ formatearPesos(+c.TotalCompra) }}</td>
+            <td>
+              <span class="estado-badge-compra"
+                    [class.compra-pendiente]="c.EstadoCompra === 'Pendiente'"
+                    [class.compra-pagada]="c.EstadoCompra === 'Pagada' || c.EstadoCompra === 'Completada'">
+                {{ c.EstadoCompra }}
+              </span>
+            </td>
+            <td>
+              <span class="beneficio-cell" [class.con-beneficio]="c.EstadoBeneficio != null">
+                <svg *ngIf="c.EstadoBeneficio == null" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                <svg *ngIf="c.EstadoBeneficio != null" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ c.EstadoBeneficio != null ? 'Con beneficio' : 'Sin beneficio' }}
+              </span>
+            </td>
+            <td class="td-muted">{{ c.FormaPago }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="comprasMes.length === 0">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <p>No hay compras registradas este mes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Buscador ───────────────────────────────────────────────────── -->
+  <div class="card-section" *ngIf="tabActivo === 'buscar'">
+    <div class="section-header">
+      <h2>
+        <span class="dot-accent"></span>
+        BUSCAR COMPRA
+      </h2>
+      <div class="section-header-right">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" class="search-input"
+                 placeholder="Cliente, producto, fecha o estado..."
+                 [(ngModel)]="busqueda"
+                 (input)="onBuscar()" />
+          <button class="search-clear" *ngIf="busqueda" (click)="limpiarBusqueda()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-loading" *ngIf="buscando">
+      <span class="spinner spinner-dark"></span> Buscando...
+    </div>
+
+    <div class="table-responsive" *ngIf="!buscando && resultadosBusqueda.length > 0">
+      <table class="tabla-baldrium">
+        <thead>
+          <tr>
+            <th>CLIENTE</th>
+            <th>PRODUCTO</th>
+            <th>FECHA</th>
+            <th style="text-align:right">VALOR</th>
+            <th>ESTADO</th>
+            <th>BENEFICIO</th>
+            <th>FORMA DE PAGO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of resultadosBusqueda">
+            <td>
+              <div class="user-cell">
+                <div class="avatar-initials avatar-{{ getPrimeraLetra(c.NombreCliente) }}">
+                  {{ getIniciales(c.NombreCliente) }}
+                </div>
+                <span class="user-cell-name">{{ c.NombreCliente }}</span>
+              </div>
+            </td>
+            <td class="td-productos-inline" [title]="c.Productos">{{ c.Productos }}</td>
+            <td class="td-fecha">{{ formatearFecha(c.FechaCompra) }}</td>
+            <td style="text-align:right" class="td-valor-green">{{ formatearPesos(+c.TotalCompra) }}</td>
+            <td>
+              <span class="estado-badge-compra"
+                    [class.compra-pendiente]="c.EstadoCompra === 'Pendiente'"
+                    [class.compra-pagada]="c.EstadoCompra === 'Pagada' || c.EstadoCompra === 'Completada'">
+                {{ c.EstadoCompra }}
+              </span>
+            </td>
+            <td>
+              <span class="beneficio-cell" [class.con-beneficio]="c.EstadoBeneficio != null">
+                <svg *ngIf="c.EstadoBeneficio == null" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                <svg *ngIf="c.EstadoBeneficio != null" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ c.EstadoBeneficio != null ? 'Con beneficio' : 'Sin beneficio' }}
+              </span>
+            </td>
+            <td class="td-muted">{{ c.FormaPago }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state buscar-placeholder" *ngIf="!buscando && busqueda && resultadosBusqueda.length === 0">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <p>No hay compras registradas.</p>
+    </div>
+
+    <div class="buscar-hint" *ngIf="!buscando && !busqueda">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      Escribe para buscar en todas tus compras.
+      <span *ngIf="resultadosBusqueda.length === 0 && !buscando && busqueda === ''">
+        <br/>No hay compras registradas.
+      </span>
+    </div>
+  </div>
+
+</div>

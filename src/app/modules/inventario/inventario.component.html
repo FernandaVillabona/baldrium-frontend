@@ -1,1 +1,602 @@
-<p>inventario works!</p>
+<div class="page-inventario">
+
+  <!-- ── Cabecera ──────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Inventario</h1>
+      <p>Gestiona el inventario de activos, alimentación y beneficios</p>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn-accion-primary" (click)="abrirCrear()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        AÑADIR PRODUCTO
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPIs ──────────────────────────────────────────────────────── -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value">{{ totalProductos }}</span>
+        <span class="kpi-label">Total productos</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value">{{ enStock }}</span>
+        <span class="kpi-label">En stock</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-yellow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value">{{ bajoStock }}</span>
+        <span class="kpi-label">Bajo stock</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-red">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value">{{ sinStock }}</span>
+        <span class="kpi-label">Sin stock</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-wide">
+      <div class="kpi-icon kpi-icon-gold">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-value">{{ formatearPrecio(valorTotalInventario) }}</span>
+        <span class="kpi-label">Valor total en inventario</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabla productos ────────────────────────────────────────────── -->
+  <div class="card-section">
+    <div class="section-header">
+      <h2>Gestión de Inventario</h2>
+      <div class="section-header-right">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar producto..."
+            [(ngModel)]="busqueda"
+            (input)="onBuscar()"
+          />
+        </div>
+        <button class="btn-filtro" (click)="toggleFiltros()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtros
+          <span class="filtro-badge" *ngIf="filtrosActivos > 0">{{ filtrosActivos }}</span>
+        </button>
+        <button class="btn-filtro" (click)="exportarPDF()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exportar
+        </button>
+      </div>
+    </div>
+
+    <!-- Panel filtros -->
+    <div class="filtros-panel" *ngIf="mostrarFiltros">
+      <div class="filtros-grid">
+        <div class="filtro-group">
+          <label>TIPO</label>
+          <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+            <option value="">Todos los tipos</option>
+            <option *ngFor="let t of tiposInventario" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>STOCK</label>
+          <select [(ngModel)]="filtroStock" (change)="aplicarFiltros()">
+            <option value="">Todos</option>
+            <option value="disponible">Disponible</option>
+            <option value="bajo">Bajo Stock</option>
+            <option value="sin">Sin Stock</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>ORDENAR POR</label>
+          <select [(ngModel)]="filtroOrden" (change)="aplicarFiltros()">
+            <option value="">Sin orden</option>
+            <option value="nombre-asc">Nombre A→Z</option>
+            <option value="nombre-desc">Nombre Z→A</option>
+            <option value="cantidad-asc">Menor cantidad</option>
+            <option value="cantidad-desc">Mayor cantidad</option>
+            <option value="valor-desc">Mayor valor</option>
+          </select>
+        </div>
+        <div class="filtro-actions">
+          <button class="btn btn-secondary btn-sm" (click)="limpiarFiltros()">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-loading" *ngIf="cargando">
+      <span class="spinner spinner-dark"></span>
+      Cargando inventario...
+    </div>
+
+    <div class="alert-error-inline" *ngIf="error && !cargando">{{ error }}</div>
+
+    <div class="table-responsive" *ngIf="!cargando && !error">
+      <table class="tabla-baldrium">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>TIPO</th>
+            <th>VALOR UNITARIO</th>
+            <th>CANTIDAD</th>
+            <th>ESTADO STOCK</th>
+            <th>ÚLTIMA ACT.</th>
+            <th>ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of paginados">
+            <td class="td-id">#{{ p.ID }}</td>
+            <td class="td-nombre">{{ p.Nombre }}</td>
+            <td>
+              <span class="badge-tipo" [ngClass]="getTipoClass(p.Tipo)">
+                {{ p.Tipo }}
+              </span>
+            </td>
+            <td class="td-valor">{{ formatearPrecio(p.Valor) }}</td>
+            <td class="td-cantidad">{{ p.Cantidad }}</td>
+            <td>
+              <span class="badge-stock" [ngClass]="getEstadoStockClass(p.Cantidad)">
+                {{ getEstadoStock(p.Cantidad) }}
+              </span>
+            </td>
+            <td class="td-fecha">{{ formatearFecha(p.UpdatedAt || '') }}</td>
+            <td>
+              <div class="acciones-wrap">
+                <button class="btn-editar" (click)="abrirEditar(p)">EDITAR</button>
+                <button class="btn-eliminar" (click)="abrirConfirmEliminar(p, $event)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="paginados.length === 0">
+            <td colspan="8" class="table-empty">No se encontraron productos</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="paginacion">
+        <span class="pag-info">
+          Mostrando {{ paginados.length }} de {{ productosFiltrados.length }} productos
+        </span>
+        <div class="pag-btns">
+          <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <button (click)="paginaSiguiente()"
+                  [disabled]="paginaActual === totalPaginas || totalPaginas === 0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tabla auditoría inventario ────────────────────────────────── -->
+  <div class="card-section">
+    <div class="section-header">
+      <h2>Movimientos de Inventario</h2>
+      <div class="section-header-right">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar producto, responsable..."
+            [(ngModel)]="busquedaAuditoria"
+          />
+        </div>
+        <button class="btn-filtro" (click)="toggleFiltrosAuditoria()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtros
+          <span class="filtro-badge" *ngIf="filtrosAuditoriaActivos > 0">
+            {{ filtrosAuditoriaActivos }}
+          </span>
+        </button>
+        <button class="btn-filtro" (click)="exportarAuditoriaPDF()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exportar
+        </button>
+      </div>
+    </div>
+
+    <!-- Panel filtros auditoría -->
+    <div class="filtros-panel" *ngIf="mostrarFiltrosAuditoria">
+      <div class="filtros-grid">
+        <div class="filtro-group">
+          <label>MOVIMIENTO</label>
+          <select [(ngModel)]="filtroAudTipo" (change)="paginaAuditoria = 1">
+            <option value="">Todos</option>
+            <option value="ENTRADA">Entrada</option>
+            <option value="SALIDA">Salida</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>MOTIVO</label>
+          <select [(ngModel)]="filtroAudMotivo" (change)="paginaAuditoria = 1">
+            <option value="">Todos</option>
+            <option value="AJUSTE_POSITIVO">Ajuste Positivo</option>
+            <option value="AJUSTE_NEGATIVO">Ajuste Negativo</option>
+            <option value="BAJA">Baja</option>
+            <option value="VENTA">Venta</option>
+            <option value="COMPRA">Compra</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>FECHA DESDE</label>
+          <input type="date" [(ngModel)]="filtroAudFechaDesde"
+                 (change)="paginaAuditoria = 1" />
+        </div>
+        <div class="filtro-group">
+          <label>FECHA HASTA</label>
+          <input type="date" [(ngModel)]="filtroAudFechaHasta"
+                 (change)="paginaAuditoria = 1" />
+        </div>
+        <div class="filtro-actions">
+          <button class="btn btn-secondary btn-sm"
+                  (click)="limpiarFiltrosAuditoria()">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="tabla-baldrium">
+        <thead>
+          <tr>
+            <th>FECHA Y HORA</th>
+            <th>PRODUCTO</th>
+            <th>RESPONSABLE</th>
+            <th>MOVIMIENTO</th>
+            <th>CANT. ANT.</th>
+            <th>MOVIMIENTO</th>
+            <th>CANT. POST.</th>
+            <th>MOTIVO</th>
+            <th>OBSERVACIONES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of auditoriaPaginada">
+            <td class="td-fecha">{{ formatearFecha(a.FechaHora) }}</td>
+            <td class="td-nombre">{{ a.NombreProducto }}</td>
+            <td>
+              <div class="user-cell">
+<div class="avatar-initials avatar-initials-sm
+     avatar-{{ getPrimeraLetra(a.NombreResponsable || '') }}">
+  {{ getInicialesResponsable(a.NombreResponsable || '') }}
+</div>
+                <div class="user-cell-info">
+                  <span class="user-cell-name">{{ a.NombreResponsable }}</span>
+                  <span class="user-cell-id">{{ a.CedulaResponsable }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge-movimiento" [ngClass]="getMovimientoClass(a.TipoMovimiento)">
+                {{ a.TipoMovimiento }}
+              </span>
+            </td>
+            <td class="td-cantidad">{{ a.CantidadAnterior }}</td>
+            <td class="td-cantidad" [ngClass]="a.TipoMovimiento === 'ENTRADA' ? 'cantidad-positiva' : 'cantidad-negativa'">
+              {{ a.TipoMovimiento === 'ENTRADA' ? '+' : '-' }}{{ a.CantidadMovimiento }}
+            </td>
+            <td class="td-cantidad">{{ a.CantidadPosterior }}</td>
+            <td>
+              <span class="badge-motivo" [ngClass]="getMotivoClass(a.Motivo)">
+                {{ a.Motivo }}
+              </span>
+            </td>
+            <td class="td-observaciones">{{ a.Observaciones || '—' }}</td>
+          </tr>
+          <tr *ngIf="auditoriaPaginada.length === 0">
+            <td colspan="9" class="table-empty">Sin movimientos registrados</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="paginacion">
+        <span class="pag-info">
+          Mostrando {{ auditoriaPaginada.length }} de
+          {{ auditoriaFiltrada.length }} movimientos
+        </span>
+        <div class="pag-btns">
+          <button (click)="paginaAuditoria = paginaAuditoria - 1"
+                  [disabled]="paginaAuditoria === 1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <button (click)="paginaAuditoria = paginaAuditoria + 1"
+                  [disabled]="paginaAuditoria === totalPaginasAuditoria">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ MODAL Crear / Editar ══════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="modalMode" (click)="cerrarModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+        </div>
+        <div>
+          <h3>{{ modalMode === 'crear' ? 'Añadir Producto' : 'Editar Producto' }}</h3>
+          <p>{{ modalMode === 'crear' ? 'Registrar nuevo producto en inventario' : 'Modificar producto existente' }}</p>
+        </div>
+      </div>
+      <button class="modal-close" (click)="cerrarModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="form" [formGroup]="form">
+
+      <div class="alert-error-inline" *ngIf="errorModal">{{ errorModal }}</div>
+
+      <!-- Nota informativa -->
+      <div class="modal-nota">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Todos los movimientos de inventario son auditados automáticamente.
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group form-grid-full"
+             [class.has-error]="form.get('Nombre')?.invalid && form.get('Nombre')?.touched">
+          <label>NOMBRE DEL PRODUCTO</label>
+          <input type="text" formControlName="Nombre"
+                 placeholder="Ej. Kit de cuchillos pro" />
+        </div>
+
+        <div class="form-group"
+             [class.has-error]="form.get('Tipo')?.invalid && form.get('Tipo')?.touched">
+          <label>TIPO</label>
+          <select formControlName="Tipo">
+            <option value="">Seleccione tipo...</option>
+            <option *ngFor="let t of tiposInventario" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <div class="form-group"
+             [class.has-error]="form.get('Valor')?.invalid && form.get('Valor')?.touched">
+          <label>VALOR UNITARIO ($)</label>
+          <input type="number" formControlName="Valor"
+                 placeholder="0" min="0" />
+        </div>
+
+        <!-- Cantidad con controles +/- -->
+        <div class="form-group form-grid-full">
+          <label>CANTIDAD {{ modalMode === 'editar' ? 'ACTUAL' : 'INICIAL' }}</label>
+          <div class="cantidad-control">
+            <button type="button" class="btn-cantidad"
+                    (click)="ajustarCantidad(-1)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+            <input type="number" formControlName="Cantidad"
+                   min="0" class="input-cantidad" />
+            <button type="button" class="btn-cantidad"
+                    (click)="ajustarCantidad(1)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-footer-right">
+        <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn btn-primary"
+                (click)="guardar()"
+                [disabled]="form.invalid || cargandoModal">
+          <span *ngIf="!cargandoModal">
+            {{ modalMode === 'crear' ? 'Guardar Producto' : 'Guardar Cambios' }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+          <span *ngIf="cargandoModal" class="spinner"></span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MODAL Confirmar Eliminar ══════════════════════════════════════ -->
+<div class="modal-overlay"
+     *ngIf="mostrarConfirmEliminar"
+     (click)="cerrarConfirmEliminar()">
+  <div class="modal-card modal-card-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-icon modal-icon-danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Eliminar Producto</h3>
+          <p>Esta acción no se puede deshacer</p>
+        </div>
+      </div>
+      <button class="modal-close" (click)="cerrarConfirmEliminar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="eliminar-confirm-body">
+        <div class="producto-icon-big">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="eliminar-nombre">{{ productoAEliminar?.Nombre }}</p>
+          <p class="eliminar-correo">
+            Tipo: {{ productoAEliminar?.Tipo }} ·
+            Cantidad: {{ productoAEliminar?.Cantidad }}
+          </p>
+          <p class="eliminar-advertencia">
+            ¿Confirmas que deseas eliminar permanentemente este producto del inventario?
+          </p>
+        </div>
+      </div>
+      <div class="alert-error-inline" *ngIf="errorEliminar">
+        {{ errorEliminar }}
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-footer-right">
+        <button class="btn btn-secondary" (click)="cerrarConfirmEliminar()">
+          Cancelar
+        </button>
+        <button class="btn btn-danger-filled"
+                (click)="ejecutarEliminar()"
+                [disabled]="eliminando">
+          <span *ngIf="!eliminando">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            </svg>
+            Eliminar
+          </span>
+          <span *ngIf="eliminando" class="spinner"></span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

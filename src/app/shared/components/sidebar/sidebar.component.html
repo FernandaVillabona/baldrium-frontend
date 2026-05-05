@@ -1,1 +1,141 @@
-<p>sidebar works!</p>
+<aside class="sidebar" [class.collapsed]="collapsed">
+
+  <div class="sidebar-logo">
+    <img src="assets/images/logo-baldrium.png" alt="Baldrium" class="logo-img" />
+    <div class="logo-text" *ngIf="!collapsed">
+      <span class="logo-name">BALDRIUM</span>
+      <span class="logo-sub">GROUP S.A.S</span>
+    </div>
+  </div>
+
+  <div class="sidebar-user" *ngIf="usuario() && !collapsed">
+    <div class="user-avatar avatar-initials avatar-initials-lg avatar-{{ getPrimeraLetra(usuario()?.nombre || '') }}">
+      {{ getIniciales(usuario()?.nombre || '') }}
+    </div>
+    <div class="user-info">
+      <span class="user-greeting">Bienvenida/o</span>
+      <span class="user-name">{{ usuario()?.nombre }}</span>
+    </div>
+  </div>
+
+  <div class="sidebar-user-collapsed" *ngIf="usuario() && collapsed">
+    <div class="user-avatar avatar-initials avatar-{{ getPrimeraLetra(usuario()?.nombre || '') }}">
+      {{ getIniciales(usuario()?.nombre || '') }}
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a
+      *ngFor="let item of itemsVisibles"
+      [routerLink]="item.ruta"
+      class="nav-item"
+      [class.active]="esActivo(item.ruta)"
+      (click)="onNavClick()"
+      [title]="collapsed ? item.label : ''"
+    >
+      <span class="nav-icon">
+        <ng-container [ngSwitch]="item.icono">
+
+          <svg *ngSwitchCase="'dashboard'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+
+          <svg *ngSwitchCase="'clientes'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3z"/>
+            <path d="M8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/>
+            <path d="M8 13c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            <path d="M16 13c-.29 0-.62.02-.97.05C16.19 13.89 17 15.02 17 16v3h7v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+
+          <svg *ngSwitchCase="'users'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <svg *ngSwitchCase="'visitas'" width="18" height="18" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.8">
+  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+  <circle cx="9" cy="7" r="4"/>
+  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+</svg>
+
+<svg *ngSwitchCase="'compras'" width="18" height="18" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.8">
+  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+  <line x1="3" y1="6" x2="21" y2="6"/>
+  <path d="M16 10a4 4 0 0 1-8 0"/>
+</svg>
+
+          <svg *ngSwitchCase="'inventory'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+
+          <svg *ngSwitchCase="'phone'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l1.75-1.75a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+
+          <svg *ngSwitchCase="'gift'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polyline points="20 12 20 22 4 22 4 12"/>
+            <rect x="2" y="7" width="20" height="5" rx="1"/>
+            <line x1="12" y1="22" x2="12" y2="7"/>
+            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+          </svg>
+
+          <svg *ngSwitchCase="'report'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+
+        </ng-container>
+      </span>
+      <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="sidebar-footer">
+    <a class="nav-item footer-item" (click)="irAPerfil()" [title]="collapsed ? 'Perfil' : ''">
+      <span class="nav-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      <span class="nav-label" *ngIf="!collapsed">Perfil</span>
+    </a>
+
+    <a class="nav-item footer-item logout" (click)="cerrarSesion()" [title]="collapsed ? 'Cerrar Sesión' : ''">
+      <span class="nav-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </span>
+      <span class="nav-label" *ngIf="!collapsed">Cerrar Sesión</span>
+    </a>
+
+    <div class="sidebar-current-user" *ngIf="usuario() && !collapsed">
+      <div class="user-avatar avatar-initials avatar-initials-sm avatar-{{ getPrimeraLetra(usuario()?.nombre || '') }}">
+        {{ getIniciales(usuario()?.nombre || '') }}
+      </div>
+      <div class="current-user-info">
+        <span class="current-name">{{ usuario()?.nombre }}</span>
+        <span class="current-email">{{ usuario()?.correo }}</span>
+      </div>
+    </div>
+  </div>
+
+</aside>

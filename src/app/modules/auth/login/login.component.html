@@ -1,45 +1,40 @@
 <div class="login-wrapper">
 
-  <!-- ═══════════════════════════════════════════
-       PANEL IZQUIERDO — Branding (desktop/tablet)
-       ═══════════════════════════════════════════ -->
-<div class="brand-panel">
-  <div class="brand-content">
-    <div class="logo-wrap">
+  <!-- Panel izquierdo: branding -->
+  <div class="brand-panel">
+    <div class="brand-content">
+      <div class="logo-wrap">
+        <img
+          src="assets/images/logo-baldrium.png"
+          alt="Baldrium Group S.A.S"
+          class="logo-img"
+        />
+      </div>
+    </div>
+    <div class="brand-glow"></div>
+  </div>
+
+  <!-- Panel derecho: formulario -->
+  <div class="form-panel">
+
+    <!-- Mobile header -->
+    <div class="mobile-header">
       <img
         src="assets/images/logo-baldrium.png"
         alt="Baldrium Group S.A.S"
-        class="logo-img"
+        class="mobile-logo"
       />
     </div>
-    
-  </div>
-  <div class="brand-glow"></div>
-</div>
 
-  <!-- ═══════════════════════════════════════════
-       PANEL DERECHO — Formulario
-       ═══════════════════════════════════════════ -->
-  <div class="form-panel">
-
-    <!-- Header solo visible en móvil -->
-<div class="mobile-header">
-  <img
-    src="assets/images/logo-baldrium.png"
-    alt="Baldrium Group S.A.S"
-    class="mobile-logo"
-  />
-</div>
-    <!-- Card del formulario -->
+    <!-- Card -->
     <div class="form-card">
 
-      <!-- Título -->
       <div class="form-header">
         <h2>Iniciar Sesión</h2>
         <p>Bienvenido de nuevo. Ingrese sus credenciales para acceder al sistema.</p>
       </div>
 
-      <!-- Alerta de error -->
+      <!-- Error de login -->
       <div class="alert-error" *ngIf="error">
         <svg width="15" height="15" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2">
@@ -52,7 +47,7 @@
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
-        <!-- ── Campo Cédula ─────────────────────────────── -->
+        <!-- Cédula -->
         <div class="field-group"
              [class.field-error]="cedulaCtrl.invalid && cedulaCtrl.touched">
           <label for="cedula">CEDULA</label>
@@ -60,9 +55,8 @@
             <svg class="input-icon" width="16" height="16"
                  viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="1.5">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12
-                       c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2
-                       V6c0-1.1.9-2 2-2z"/>
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2
+                       H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>
             </svg>
             <input
@@ -80,10 +74,10 @@
           </span>
         </div>
 
-        <!-- ── Campo Contraseña ────────────────────────── -->
+        <!-- Contraseña -->
         <div class="field-group"
-             [class.field-error]="passwordCtrl.invalid && passwordCtrl.touched">
-          <label for="password">CONTRASEÑA</label>
+             [class.field-error]="contrasenaCtrl.invalid && contrasenaCtrl.touched">
+          <label for="contrasena">CONTRASEÑA</label>
           <div class="input-wrap">
             <svg class="input-icon" width="16" height="16"
                  viewBox="0 0 24 24" fill="none"
@@ -92,52 +86,42 @@
               <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
             <input
-              id="password"
+              id="contrasena"
               [type]="mostrarPass ? 'text' : 'password'"
-              formControlName="password"
+              formControlName="contrasena"
               placeholder="••••••••••••"
               autocomplete="current-password"
             />
-            <button
-              type="button"
-              class="btn-toggle-pass"
-              (click)="togglePass()"
-              tabindex="-1"
-              [attr.aria-label]="mostrarPass ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-            >
-              <!-- Ojo abierto -->
+            <button type="button" class="btn-toggle-pass"
+                    (click)="togglePass()" tabindex="-1">
               <svg *ngIf="!mostrarPass" width="17" height="17"
                    viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="1.5">
-                <path d="M1 12s4-8 11-8 11 8 11 8
-                         -4 8-11 8-11-8-11-8z"/>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                 <circle cx="12" cy="12" r="3"/>
               </svg>
-              <!-- Ojo cerrado -->
               <svg *ngIf="mostrarPass" width="17" height="17"
                    viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="1.5">
                 <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20
-                         c-7 0-11-8-11-8
-                         a18.45 18.45 0 0 1 5.06-5.94"/>
+                         c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
                 <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4
-                         c7 0 11 8 11 8
-                         a18.5 18.5 0 0 1-2.16 3.19"/>
+                         c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
                 <line x1="1" y1="1" x2="23" y2="23"/>
               </svg>
             </button>
           </div>
           <span class="field-hint"
-                *ngIf="passwordCtrl.hasError('required') && passwordCtrl.touched">
+                *ngIf="contrasenaCtrl.hasError('required') && contrasenaCtrl.touched">
             La contraseña es requerida
           </span>
           <span class="field-hint"
-                *ngIf="passwordCtrl.hasError('minlength') && passwordCtrl.touched">
+                *ngIf="contrasenaCtrl.hasError('minlength') && contrasenaCtrl.touched">
             Mínimo 6 caracteres
           </span>
         </div>
 
-        <!-- ── Botón Ingresar ──────────────────────────── -->
+        <!-- Botón -->
         <button
           type="submit"
           class="btn-login"
@@ -153,10 +137,10 @@
 
       </form>
 
-      <!-- Link olvidé contraseña -->
-      <p class="forgot-link">¿Olvidaste tu contraseña?</p>
+      <p class="forgot-link" (click)="abrirModalOlvide()">
+        ¿Olvidaste tu contraseña?
+      </p>
 
-      <!-- Footer de seguridad -->
       <div class="security-footer">
         SEGURIDAD ENCRIPTADA &bull; BALDRIUM MANAGEMENT SYSTEM
       </div>
@@ -164,4 +148,85 @@
     </div>
   </div>
 
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL — Olvidé mi contraseña
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="mostrarModalOlvide" (click)="cerrarModalOlvide()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>Recuperar contraseña</h3>
+      <button class="modal-close" (click)="cerrarModalOlvide()">
+        <svg width="18" height="18" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6"  x2="6"  y2="18"/>
+          <line x1="6"  y1="6"  x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <p class="modal-desc">
+      Ingresa tu correo electrónico y te enviaremos una contraseña temporal.
+    </p>
+
+    <!-- Mensaje de éxito -->
+    <div class="alert-success" *ngIf="mensajeRecuperacion">
+      <svg width="15" height="15" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      {{ mensajeRecuperacion }}
+    </div>
+
+    <!-- Error -->
+    <div class="alert-error" *ngIf="errorRecuperacion">
+      {{ errorRecuperacion }}
+    </div>
+
+    <div class="field-group" *ngIf="!mensajeRecuperacion">
+      <label>CORREO ELECTRÓNICO</label>
+      <div class="input-wrap">
+        <svg class="input-icon" width="16" height="16"
+             viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2
+                   H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <input
+          type="email"
+          [(ngModel)]="correoRecuperacion"
+          placeholder="usuario@baldrium.com"
+          [disabled]="enviandoCorreo"
+        />
+      </div>
+    </div>
+
+    <div class="modal-actions" *ngIf="!mensajeRecuperacion">
+      <button class="btn-secondary" (click)="cerrarModalOlvide()">
+        Cancelar
+      </button>
+      <button
+        class="btn-login"
+        (click)="enviarRecuperacion()"
+        [disabled]="enviandoCorreo"
+        [class.is-loading]="enviandoCorreo"
+      >
+        <span *ngIf="!enviandoCorreo">Enviar</span>
+        <span *ngIf="enviandoCorreo" class="spinner-wrap">
+          <span class="spinner"></span>
+        </span>
+      </button>
+    </div>
+
+    <button class="btn-login modal-btn-cerrar"
+            *ngIf="mensajeRecuperacion"
+            (click)="cerrarModalOlvide()">
+      Cerrar
+    </button>
+
+  </div>
 </div>

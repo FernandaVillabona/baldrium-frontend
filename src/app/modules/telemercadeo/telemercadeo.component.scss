@@ -1,0 +1,268 @@
+@import 'assets/styles/tokens';
+
+.page-telemercadeo {
+  display:        flex;
+  flex-direction: column;
+  gap:            20px;
+  padding:        4px;
+  animation:      fadeInLeft 0.3s ease;
+}
+
+// ── KPI ────────────────────────────────────────────────────────
+.kpi-grid {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   16px;
+
+  @include mobile { grid-template-columns: 1fr; }
+  @include tablet { grid-template-columns: repeat(2, 1fr); }
+
+  &-2 { grid-template-columns: repeat(2, minmax(0, 320px)); }
+}
+
+.kpi-card {
+  @include card;
+  padding: 20px 24px;
+
+  .kpi-label {
+    font-size:      11px;
+    font-weight:    700;
+    color:          $text-muted;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom:  10px;
+    line-height:    1.4;
+  }
+
+  .kpi-value {
+    font-family: $font-display;
+    font-size:   40px;
+    font-weight: 800;
+    color:       $text-primary;
+    line-height: 1;
+
+    &-danger  { color: $danger;  }
+    &-success { color: $success; }
+  }
+}
+
+// ── Tabs ───────────────────────────────────────────────────────
+.tabs-bar {
+  display:        flex;
+  gap:            4px;
+  border-bottom:  2px solid $border;
+}
+
+.tab-btn {
+  padding:       10px 20px;
+  background:    none;
+  border:        none;
+  cursor:        pointer;
+  font-family:   $font-body;
+  font-size:     14px;
+  font-weight:   600;
+  color:         $text-muted;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition:    all 0.2s;
+
+  &:hover     { color: $text-primary; }
+  &.tab-active { color: $text-primary; border-color: $gold; }
+}
+
+// ── Card section ───────────────────────────────────────────────
+.card-section {
+  @include card;
+  overflow: hidden;
+}
+
+.section-dot-header {
+  display:        flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        14px 20px;
+  font-size:      11px;
+  font-weight:    700;
+  color:          $text-muted;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border-bottom:  1px solid $border;
+}
+
+.dot {
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  flex-shrink:   0;
+
+  &-green { background: $success; }
+  &-blue  { background: $info; }
+}
+
+// ── Buscador ──────────────────────────────────────────────────
+.search-row {
+  display:     flex;
+  align-items: center;
+  gap:         16px;
+  padding:     16px 20px;
+  flex-wrap:   wrap;
+}
+
+.search-wrap {
+  position:    relative;
+  display:     flex;
+  align-items: center;
+
+  &-full { flex: 1; min-width: 240px; }
+}
+
+.search-icon {
+  position:       absolute;
+  left:           12px;
+  color:          $text-muted;
+  pointer-events: none;
+}
+
+.search-input {
+  width:         100%;
+  padding:       9px 14px 9px 36px;
+  background:    #F8F9FB;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13.5px;
+  color:         $text-primary;
+  outline:       none;
+  transition:    all 0.2s;
+
+  &::placeholder { color: #BBC0CC; }
+  &:focus {
+    border-color: $gold;
+    background:   $white;
+    box-shadow:   0 0 0 3px rgba(201,168,76,0.12);
+  }
+}
+
+.search-hint {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  font-size:   12px;
+  color:       $text-muted;
+  white-space: nowrap;
+}
+
+// ── Tabla helpers ──────────────────────────────────────────────
+.table-responsive { overflow-x: auto; }
+
+.td-fecha    { white-space: nowrap; font-weight: 600; font-size: 13px; }
+.td-muted    { color: $text-muted; font-size: 13px; }
+.td-center   { text-align: center; }
+.td-notas    { max-width: 200px; @include truncate; }
+.td-producto { max-width: 260px; @include truncate; }
+.td-valor    { font-weight: 700; color: $success; white-space: nowrap; }
+
+.table-loading {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  padding:     32px 20px;
+  color:       $text-muted;
+  font-size:   13px;
+}
+
+.table-empty {
+  text-align: center;
+  padding:    32px;
+  color:      $text-muted;
+  font-size:  13px;
+}
+
+.alert-error-inline {
+  padding:       10px 16px;
+  background:    $danger-bg;
+  border:        1px solid rgba(231,76,60,0.25);
+  border-radius: $radius-md;
+  color:         $danger;
+  font-size:     13px;
+}
+
+// ── Estado badges ──────────────────────────────────────────────
+.badge-estado-v {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           4px;
+  padding:       4px 10px;
+  border-radius: $radius-full;
+  font-size:     12px;
+  font-weight:   700;
+  white-space:   nowrap;
+
+  &.estado-visitado    { background: $success-bg;                       color: $success;     }
+  &.estado-pendiente   { background: $warning-bg;                       color: $warning;     }
+  &.estado-rechazado   { background: $danger-bg;                        color: $danger;      }
+  &.estado-no-contesta { background: rgba(144,148,166,0.12);            color: $text-muted;  }
+}
+
+// ── Tipo / pago badges ─────────────────────────────────────────
+.tipo-badge {
+  padding:       3px 8px;
+  background:    $info-bg;
+  color:         $info;
+  border-radius: $radius-full;
+  font-size:     11px;
+  font-weight:   600;
+}
+
+.forma-pago-badge {
+  padding:       3px 8px;
+  background:    rgba(201,168,76,0.12);
+  color:         $gold-dark;
+  border-radius: $radius-full;
+  font-size:     11px;
+  font-weight:   600;
+  white-space:   nowrap;
+}
+
+// ── Beneficio cell ────────────────────────────────────────────
+.beneficio-cell {
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+  font-size:   12px;
+  font-weight: 500;
+
+  &.sin-beneficio { color: $danger; }
+}
+
+// ── Acciones ──────────────────────────────────────────────────
+.acciones-wrap {
+  display: flex;
+  gap:     6px;
+}
+
+.btn-accion-sm {
+  padding:       5px 10px;
+  border-radius: $radius-sm;
+  font-family:   $font-body;
+  font-size:     12px;
+  font-weight:   600;
+  cursor:        pointer;
+  border:        none;
+  white-space:   nowrap;
+  transition:    all 0.2s;
+}
+
+.btn-ver {
+  background: #F0F2F5;
+  color:      $text-secondary;
+  border:     1px solid $border;
+  &:hover { background: $border; }
+}
+
+.btn-comprar {
+  background: $success-bg;
+  color:      $success;
+  border:     1px solid rgba(39,174,96,0.25);
+  &:hover { background: rgba(39,174,96,0.18); }
+}

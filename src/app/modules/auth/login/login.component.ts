@@ -4,7 +4,8 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
+  FormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -12,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -23,6 +24,13 @@ export class LoginComponent implements OnInit {
   error       = '';
   mostrarPass = false;
 
+  // Estado del modal "olvidé contraseña"
+  mostrarModalOlvide  = false;
+  correoRecuperacion  = '';
+  enviandoCorreo      = false;
+  mensajeRecuperacion = '';
+  errorRecuperacion   = '';
+
   constructor(
     private fb:     FormBuilder,
     private auth:   AuthService,
@@ -30,15 +38,15 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Si ya hay sesión activa, redirigir directo al dashboard
     if (this.auth.estaAutenticado()) {
       this.router.navigate(['/dashboard']);
       return;
     }
 
     this.form = this.fb.group({
-      cedula:   ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      cedula:     ['', [Validators.required]],
+      contrasena: ['', [Validators.required, Validators.minLength(6)]]
+      //           ↑ "contrasena" igual que el backend
     });
   }
 
@@ -48,42 +56,62 @@ export class LoginComponent implements OnInit {
     this.cargando = true;
     this.error    = '';
 
-    // ── Aquí se conectará al backend ──────────────────────────────────
-    // El AuthService ya tiene el método login() listo.
-    // Cuando el backend esté disponible, solo descomenta este bloque
-    // y elimina el setTimeout de prueba de abajo.
-    //
-    // this.auth.login(this.form.value).subscribe({
-    //   next: () => {
-    //     this.cargando = false;
-    //     this.router.navigate(['/dashboard']);
-    //   },
-    //   error: (err: any) => {
-    //     this.cargando = false;
-    //     this.error = err?.error?.message ?? 'Credenciales inválidas.';
-    //   }
-    // });
-
-    // ── Simulación temporal (sin backend) ─────────────────────────────
-    // Eliminar este bloque cuando conectes al backend real
-    setTimeout(() => {
-      this.cargando = false;
-      // Simula credenciales correctas: cedula=12345, password=123456
-      if (
-        this.form.value.cedula   === '12345' &&
-        this.form.value.password === '123456'
-      ) {
+    this.auth.login(this.form.value).subscribe({
+      next: () => {
+        this.cargando = false;
         this.router.navigate(['/dashboard']);
-      } else {
-        this.error = 'Credenciales inválidas. Intenta nuevamente.';
+      },
+      error: (err: any) => {
+        this.cargando = false;
+        // El backend devuelve { error: '...' } no { message: '...' }
+        this.error =
+          err?.error?.error ||
+          err?.error?.message ||
+          'Credenciales inválidas. Intenta nuevamente.';
       }
-    }, 1200);
+    });
   }
 
-  togglePass(): void {
-    this.mostrarPass = !this.mostrarPass;
+  // ── Olvidé contraseña ──────────────────────────────────────────────
+  abrirModalOlvide(): void {
+    this.mostrarModalOlvide  = true;
+    this.correoRecuperacion  = '';
+    this.mensajeRecuperacion = '';
+    this.errorRecuperacion   = '';
   }
 
-  get cedulaCtrl()   { return this.form.get('cedula')!; }
-  get passwordCtrl() { return this.form.get('password')!; }
+  cerrarModalOlvide(): void {
+    this.mostrarModalOlvide = false;
+  }
+
+  enviarRecuperacion(): void {
+    if (!this.correoRecuperacion || !this.correoRecuperacion.includes('@')) {
+      this.errorRecuperacion = 'Ingresa un correo electrónico válido.';
+      return;
+    }
+
+    this.enviandoCorreo      = true;
+    this.errorRecuperacion   = '';
+    this.mensajeRecuperacion = '';
+
+    this.auth.olvideMiContrasena(this.correoRecuperacion).subscribe({
+      next: (res) => {
+        this.enviandoCorreo      = false;
+        this.mensajeRecuperacion = res.mensaje;
+      },
+      error: (err: any) => {
+        this.enviandoCorreo      = false;
+        // El backend devuelve 200 incluso con error por seguridad,
+        // pero por si acaso manejamos el error HTTP
+        this.mensajeRecuperacion =
+          err?.error?.mensaje ||
+          'Si el correo existe en el sistema, recibirás las instrucciones en breve.';
+      }
+    });
+  }
+
+  togglePass(): void { this.mostrarPass = !this.mostrarPass; }
+
+  get cedulaCtrl()     { return this.form.get('cedula')!; }
+  get contrasenaCtrl() { return this.form.get('contrasena')!; }
 }

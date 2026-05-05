@@ -4,23 +4,28 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+// ── Tipos alineados al backend ────────────────────────────────────────
 export type RolUsuario =
-  | 'DIRECCION'
-  | 'COORDINACION'
-  | 'AUXILIAR_ADMINISTRATIVO'
-  | 'ASESOR_COMERCIAL'
-  | 'TELEMERCADERISTA';
+  | 'Director'
+  | 'Coordinador'
+  | 'Auxiliar Administrativo'
+  | 'Asesor comercial'
+  | 'Telemercaderista';
 
 export interface Usuario {
-  cedula:            string;
-  nombre:            string;
-  correoElectronico: string;
-  rol:               RolUsuario;
+  cedula:           string;
+  nombre:           string;
+  celular:          string;
+  telefono:         string;
+  correo:           string;      // ← backend devuelve "correo"
+  direccion:        string;
+  codigoTrabajador: string;
+  roles:            RolUsuario[]; // ← array, no string
 }
 
 export interface LoginRequest {
-  cedula:   string;
-  password: string;
+  cedula:    string;
+  contrasena: string;             // ← backend espera "contrasena"
 }
 
 export interface LoginResponse {
@@ -28,12 +33,13 @@ export interface LoginResponse {
   usuario: Usuario;
 }
 
+// Permisos por módulo
 const PERMISOS: Record<RolUsuario, string[]> = {
-  DIRECCION:               ['dashboard','usuarios','inventario','telemercadeo','beneficios','auditoria'],
-  COORDINACION:            ['dashboard','inventario','telemercadeo','beneficios'],
-  AUXILIAR_ADMINISTRATIVO: ['dashboard','beneficios','telemercadeo'],
-  ASESOR_COMERCIAL:        ['dashboard','telemercadeo','beneficios'],
-  TELEMERCADERISTA:        ['dashboard','telemercadeo']
+  'Director':                ['usuarios','inventario','telemercadeo','beneficios','auditoria'], //usuarios
+  'Coordinador':             ['inventario','telemercadeo','beneficios'], // inventario
+  'Auxiliar Administrativo': ['beneficios','telemercadeo'], //Validar beneficios y Validar compras - diferentes vistas
+  'Asesor comercial':        ['telemercadeo','beneficios'], //clientes, compras
+  'Telemercaderista':        ['telemercadeo'] //contactos y beneficios
 };
 
 @Injectable({ providedIn: 'root' })
@@ -49,18 +55,30 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  // ── Login ─────────────────────────────────────────────────────────
   login(credenciales: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${environment.apiUrl}/auth/login`, credenciales)
       .pipe(
         tap(res => {
-          localStorage.setItem(this.TOKEN_KEY, res.token);
+          localStorage.setItem(this.TOKEN_KEY,   res.token);
           localStorage.setItem(this.USUARIO_KEY, JSON.stringify(res.usuario));
           this.usuarioSubject.next(res.usuario);
         })
       );
   }
 
+  
+
+  // ── Olvidé contraseña ─────────────────────────────────────────────
+  olvideMiContrasena(correo: string): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(
+      `${environment.apiUrl}/auth/olvide-contrasena`,
+      { correo }
+    );
+  }
+
+  // ── Logout ────────────────────────────────────────────────────────
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USUARIO_KEY);
@@ -68,6 +86,7 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
+  // ── Getters ───────────────────────────────────────────────────────
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
@@ -87,14 +106,20 @@ export class AuthService {
     return this.usuarioSubject.value;
   }
 
-  getRolActual(): RolUsuario | null {
-    return this.getUsuarioActual()?.rol ?? null;
+  getRoles(): RolUsuario[] {
+    return this.getUsuarioActual()?.roles ?? [];
   }
 
+  // Verifica si el usuario tiene AL MENOS uno de los roles dados
+  tieneRol(...roles: RolUsuario[]): boolean {
+    const misRoles = this.getRoles();
+    return roles.some(r => misRoles.includes(r));
+  }
+
+  // Verifica permiso de módulo según el primer rol del usuario
   tienePermiso(modulo: string): boolean {
-    const rol = this.getRolActual();
-    if (!rol) return false;
-    return PERMISOS[rol].includes(modulo);
+    const roles = this.getRoles();
+    return roles.some(r => PERMISOS[r]?.includes(modulo));
   }
 
   private getUsuarioGuardado(): Usuario | null {
@@ -105,4 +130,14 @@ export class AuthService {
       return null;
     }
   }
+
+  actualizarUsuarioLocal(datos: Partial<Usuario>): void {
+  const actual = this.getUsuarioActual();
+  if (!actual) return;
+  const actualizado = { ...actual, ...datos };
+  localStorage.setItem(this.USUARIO_KEY, JSON.stringify(actualizado));
+  this.usuarioSubject.next(actualizado);
+}
+
+  
 }

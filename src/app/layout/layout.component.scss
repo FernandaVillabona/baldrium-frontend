@@ -1,0 +1,139 @@
+@import 'assets/styles/tokens';
+
+.app-shell {
+  display:    flex;
+  height:     100vh;      
+  overflow:   hidden;     
+  background: $content-bg;
+}
+
+.sidebar-wrapper {
+  flex-shrink: 0;
+  position:    sticky;    
+  top:         0;         
+  height:      100vh;     
+  align-self:  flex-start;
+
+  @media (max-width: 767px) {
+    position:  fixed;
+    top:       0;
+    left:      0;
+    height:    100vh;
+    z-index:   500;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    &.mobile-open { transform: translateX(0); }
+  }
+}
+.mobile-overlay {
+  display: none;
+
+  @media (max-width: 767px) {
+    display:    block;
+    position:   fixed;
+    inset:      0;
+    background: rgba(0,0,0,0.55);
+    z-index:    499;
+    animation:  fadeIn 0.2s ease;
+  }
+}
+
+.main-wrapper {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  min-width:      0;
+  overflow:       hidden; 
+
+  @media (max-width: 767px) {
+    margin-left: 0 !important;
+    width:       100%;
+  }
+}
+
+
+.topbar {
+  height:          $topbar-height;
+  background:      $sidebar-bg;
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         0 24px;
+  flex-shrink:     0;
+  position:        sticky;
+  top:             0;
+  z-index:         200;
+  border-bottom:   1px solid rgba(255,255,255,0.06);
+
+  @media (max-width: 767px) { padding: 0 16px; }
+}
+
+.topbar-left {
+  display:     flex;
+  align-items: center;
+  gap:         16px;
+}
+
+.btn-menu {
+  background:    none;
+  border:        none;
+  cursor:        pointer;
+  color:         rgba(255,255,255,0.70);
+  display:       flex;
+  align-items:   center;
+  padding:       6px;
+  border-radius: $radius-sm;
+  transition:    all 0.2s;
+
+  &:hover { background: $sidebar-hover; color: $white; }
+}
+
+.topbar-rol {
+  font-family:    $font-display;
+  font-size:      13px;
+  font-weight:    600;
+  color:          rgba(255,255,255,0.70);
+  letter-spacing: 0.5px;
+}
+
+.topbar-right {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.page-content {
+  flex:       1;
+  padding:    28px;
+  overflow-y: auto;
+
+  @media (min-width: 768px) and (max-width: 1199px) { padding: 20px; }
+  @media (max-width: 767px)  { padding: 16px; }
+}
+
+// ── Roles en topbar ───────────────────────────────────────────────
+.topbar-roles {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  flex-wrap:   wrap;
+}
+
+.topbar-badge {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        3px 10px;
+  border-radius:  9999px;
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+
+  &.topbar-badge-director    { background: rgba(#C9A84C, .20); color: #7A5E1A; }
+  &.topbar-badge-coordinador { background: rgba(#2980B9, .15); color: #1A5276; }
+  &.topbar-badge-asesor      { background: rgba(#27AE60, .15); color: #1E8449; }
+  &.topbar-badge-tele        { background: rgba(#8E44AD, .15); color: #6C3483; }
+  &.topbar-badge-auxiliar    { background: rgba(#E67E22, .15); color: #A04000; }
+  &.topbar-badge-default     { background: rgba(#95A5A6, .15); color: #616A6B; }
+}

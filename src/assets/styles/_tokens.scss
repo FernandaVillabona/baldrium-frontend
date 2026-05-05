@@ -1,0 +1,94 @@
+// ====================================================
+// BALDRIUM - Design Tokens (usar en TODO el proyecto)
+// ====================================================
+
+$sidebar-bg:      #0F1923;
+$sidebar-hover:   #1A2B44;
+$sidebar-active:  #1E3252;
+$sidebar-border:  rgba(255,255,255,0.07);
+
+$header-bg:       #0F1923;
+$topbar-height:   64px;
+$sidebar-width:   240px;
+$sidebar-collapsed: 72px;
+
+$content-bg:      #F2F4F7;
+$card-bg:         #FFFFFF;
+
+$navy-900:        #0B1622;
+$navy-800:        #0F1923;
+$navy-700:        #152338;
+$navy-600:        #1A2B44;
+
+$gold:            #C9A84C;
+$gold-light:      #DFC07A;
+$gold-dark:       #A8863A;
+
+$white:           #FFFFFF;
+$border:          #E8EAED;
+$border-dark:     #D0D3D9;
+
+$text-primary:    #1A1A2E;
+$text-secondary:  #555770;
+$text-muted:      #9094A6;
+$text-white:      #FFFFFF;
+$text-white-muted: rgba(255,255,255,0.55);
+
+$success:         #27AE60;
+$success-bg:      rgba(39,174,96,0.10);
+$danger:          #E74C3C;
+$danger-bg:       rgba(231,76,60,0.10);
+$warning:         #F59E0B;
+$warning-bg:      rgba(245,158,11,0.10);
+$info:            #3B82F6;
+$info-bg:         rgba(59,130,246,0.10);
+
+$role-director:   #10B981;
+$role-admin:      #3B82F6;
+$role-finanzas:   #8B5CF6;
+$role-auditoria:  #F59E0B;
+$role-rrhh:       #EC4899;
+$role-coord:      #06B6D4;
+
+$font-display:    'Raleway', 'Trebuchet MS', sans-serif;
+$font-body:       'DM Sans', 'Segoe UI', sans-serif;
+
+$radius-sm:       6px;
+$radius-md:       10px;
+$radius-lg:       14px;
+$radius-xl:       20px;
+$radius-full:     9999px;
+
+$shadow-sm:       0 1px 4px rgba(0,0,0,0.08);
+$shadow-md:       0 4px 16px rgba(0,0,0,0.10);
+$shadow-lg:       0 8px 32px rgba(0,0,0,0.14);
+$shadow-modal:    0 20px 60px rgba(0,0,0,0.20);
+
+@mixin mobile  { @media (max-width: 767px)                         { @content; } }
+@mixin tablet  { @media (min-width: 768px) and (max-width: 1199px) { @content; } }
+@mixin desktop { @media (min-width: 1200px)                        { @content; } }
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin card {
+  background:    $card-bg;
+  border-radius: $radius-lg;
+  border:        1px solid $border;
+  box-shadow:    $shadow-sm;
+}

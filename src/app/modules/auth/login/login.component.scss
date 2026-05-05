@@ -525,3 +525,111 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+
+// ════════════════════════════════════════════════════
+//  MODAL — Olvidé mi contraseña
+// ════════════════════════════════════════════════════
+.modal-overlay {
+  position:        fixed;
+  inset:           0;
+  background:      rgba(0, 0, 0, 0.5);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  z-index:         999;
+  padding:         20px;
+  animation:       fadeIn 0.2s ease;
+}
+
+.modal-card {
+  background:    $white;
+  border-radius: 14px;
+  padding:       36px 32px;
+  width:         100%;
+  max-width:     420px;
+  box-shadow:    0 20px 60px rgba(0, 0, 0, 0.2);
+  animation:     fadeInUp 0.3s ease;
+
+  @include mobile {
+    padding: 28px 20px;
+  }
+}
+
+.modal-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   12px;
+
+  h3 {
+    font-family: $font-display;
+    font-size:   20px;
+    font-weight: 600;
+    color:       $text-900;
+    margin:      0;
+  }
+}
+
+.modal-close {
+  background:    none;
+  border:        none;
+  cursor:        pointer;
+  color:         $text-400;
+  display:       flex;
+  align-items:   center;
+  padding:       4px;
+  border-radius: 6px;
+  transition:    color 0.2s, background 0.2s;
+
+  &:hover {
+    color:      $text-900;
+    background: $input-bg;
+  }
+}
+
+.modal-desc {
+  font-size:     13.5px;
+  color:         $text-600;
+  line-height:   1.6;
+  margin-bottom: 24px;
+}
+
+.modal-actions {
+  display:   flex;
+  gap:       12px;
+  margin-top: 8px;
+}
+
+.btn-secondary {
+  flex:          1;
+  padding:       13px;
+  background:    $input-bg;
+  border:        1.5px solid $border-soft;
+  border-radius: $radius-inp;
+  color:         $text-600;
+  font-family:   $font-display;
+  font-size:     13px;
+  font-weight:   600;
+  cursor:        pointer;
+  transition:    background 0.2s;
+
+  &:hover { background: darken($input-bg, 5%); }
+}
+
+.modal-btn-cerrar {
+  width:      100%;
+  margin-top: 16px;
+}
+
+.alert-success {
+  display:       flex;
+  align-items:   center;
+  gap:           9px;
+  background:    rgba(39, 174, 96, 0.08);
+  border:        1px solid rgba(39, 174, 96, 0.25);
+  border-radius: 8px;
+  padding:       10px 14px;
+  font-size:     13px;
+  color:         #27AE60;
+  margin-bottom: 20px;
+}

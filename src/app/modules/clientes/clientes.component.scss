@@ -1,0 +1,1685 @@
+@import 'assets/styles/tokens';
+
+// ════════════════════════════════════════════════════════════════════
+//  PAGE
+// ════════════════════════════════════════════════════════════════════
+
+.page-clientes {
+  display:        flex;
+  flex-direction: column;
+  gap:            24px;
+  background:     linear-gradient(180deg, #EDEEF3 0%, #F2F4F7 100%);
+  min-height:     100%;
+  padding:        4px;
+  animation:      fadeInLeft 0.3s ease;
+}
+
+// ── Header ────────────────────────────────────────────────────────
+.page-header {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             16px;
+  flex-wrap:       wrap;
+
+  h1 {
+    font-family: $font-display;
+    font-size:   32px;
+    font-weight: 800;
+    color:       #0F1923;
+    margin:      0 0 6px;
+  }
+
+  p {
+    font-size:   14px;
+    color:       #555770;
+    margin:      0;
+    font-weight: 500;
+  }
+}
+
+.page-header-actions {
+  display:   flex;
+  gap:       10px;
+  flex-wrap: wrap;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  KPI CARDS
+// ════════════════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════════
+//  KPIs
+// ════════════════════════════════════════════════════════════════════
+
+.kpi-grid {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr) 1.5fr;
+  gap:                   16px;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr 1fr; }
+}
+
+.kpi-card {
+  background:    #FFFFFF !important;  // ← fuerza blanco
+  border-radius: $radius-lg;
+  border:        1px solid #D8DAE8;
+  box-shadow:    $shadow-sm;
+  padding:       20px;
+  display:       flex;
+  align-items:   center;
+  gap:           14px;
+  transition:    box-shadow 0.2s;
+
+  &:hover { box-shadow: $shadow-md; }
+}
+
+.kpi-icon {
+  width:           44px;
+  height:          44px;
+  border-radius:   $radius-md;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+
+  &-blue   { background: rgba(59,130,246,0.12);  color: #3B82F6; }
+  &-green  { background: rgba(39,174,96,0.12);   color: #27AE60; }
+  &-yellow { background: rgba(245,158,11,0.12);  color: #D97706; }
+  &-red    { background: rgba(231,76,60,0.12);   color: #E74C3C; }
+  &-gold   { background: rgba(201,168,76,0.12);  color: $gold;   }
+}
+
+.kpi-info {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+}
+
+.kpi-value {
+  font-family: $font-display;
+  font-size:   22px;
+  font-weight: 800;
+  color:       #0F1923 !important;   // ← fuerza color oscuro
+  line-height: 1;
+}
+
+.kpi-label {
+  font-size:   12px;
+  color:       #555770 !important;
+  font-weight: 500;
+}
+
+
+
+
+// ════════════════════════════════════════════════════════════════════
+//  CARD SECTION
+// ════════════════════════════════════════════════════════════════════
+
+.card-section {
+  background:    $card-bg;
+  border-radius: $radius-lg;
+  border:        1px solid #D8DAE8;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 6px 16px rgba(0,0,0,0.07),
+    0 16px 32px rgba(0,0,0,0.05);
+  overflow:      hidden;
+  transition:    box-shadow 0.2s;
+
+  &:hover {
+    box-shadow:
+      0 4px 8px rgba(0,0,0,0.06),
+      0 12px 24px rgba(0,0,0,0.10),
+      0 24px 48px rgba(0,0,0,0.07);
+  }
+}
+
+// ── Section header ────────────────────────────────────────────────
+.section-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         14px 20px;
+  background:      $navy-800;
+  gap:             12px;
+  flex-wrap:       wrap;
+
+  h2 {
+    font-family: $font-display;
+    font-size:   13px;
+    font-weight: 700;
+    color:       rgba(255,255,255,0.90);
+    margin:      0;
+    white-space: nowrap;
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    letter-spacing: 0.6px;
+  }
+}
+
+.dot-accent {
+  width:         7px;
+  height:        7px;
+  border-radius: 50%;
+  background:    $gold;
+  flex-shrink:   0;
+  display:       inline-block;
+}
+
+.section-header-right {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  flex-wrap:   wrap;
+}
+
+// ── Search ────────────────────────────────────────────────────────
+.search-wrap {
+  position:    relative;
+  display:     flex;
+  align-items: center;
+}
+
+.search-icon {
+  position:       absolute;
+  left:           10px;
+  color:          rgba(255,255,255,0.45);
+  pointer-events: none;
+}
+
+.search-input {
+  padding:       8px 32px 8px 34px;
+  background:    rgba(255,255,255,0.10);
+  border:        1.5px solid rgba(255,255,255,0.15);
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  color:         $white;
+  outline:       none;
+  width:         280px;
+  transition:    all 0.2s;
+
+  &::placeholder { color: rgba(255,255,255,0.40); }
+
+  &:focus {
+    border-color: $gold;
+    background:   rgba(255,255,255,0.15);
+    box-shadow:   0 0 0 3px rgba(201,168,76,0.20);
+  }
+
+  @media (max-width: 767px) { width: 160px; }
+}
+
+.search-clear {
+  position:      absolute;
+  right:         8px;
+  background:    transparent;
+  border:        none;
+  color:         rgba(255,255,255,0.50);
+  cursor:        pointer;
+  display:       flex;
+  align-items:   center;
+  padding:       2px;
+  border-radius: 3px;
+  transition:    color 0.15s;
+
+  &:hover { color: $white; }
+}
+
+.search-placeholder {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  padding:     28px 20px;
+  color:       $text-muted;
+  font-size:   13.5px;
+}
+
+// ── Filtros ───────────────────────────────────────────────────────
+.btn-filtro {
+  display:       flex;
+  align-items:   center;
+  gap:           7px;
+  padding:       8px 14px;
+  background:    rgba(255,255,255,0.10);
+  border:        1.5px solid rgba(255,255,255,0.15);
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  font-weight:   600;
+  color:         rgba(255,255,255,0.80);
+  cursor:        pointer;
+  transition:    all 0.2s;
+  white-space:   nowrap;
+
+  &:hover {
+    background:   rgba(255,255,255,0.18);
+    border-color: $gold;
+    color:        $gold-light;
+  }
+}
+
+.filtro-badge {
+  background:      $gold;
+  color:           $white;
+  border-radius:   $radius-full;
+  font-size:       10px;
+  font-weight:     700;
+  width:           18px;
+  height:          18px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+.filtros-panel {
+  padding:       16px 20px;
+  background:    #F0F2F7;
+  border-bottom: 1px solid $border;
+  animation:     slideUp 0.2s ease;
+}
+
+.filtros-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap:                   12px;
+  align-items:           end;
+}
+
+.filtro-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            5px;
+
+  label {
+    font-size:      10px;
+    font-weight:    700;
+    color:          $text-muted;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+
+  select {
+    padding:       9px 12px;
+    background:    $white;
+    border:        1.5px solid $border;
+    border-radius: $radius-md;
+    font-family:   $font-body;
+    font-size:     13px;
+    color:         $text-primary;
+    outline:       none;
+    cursor:        pointer;
+    transition:    border-color 0.2s;
+    &:focus { border-color: $gold; }
+  }
+}
+
+.filtro-actions {
+  display:     flex;
+  align-items: flex-end;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  TABLA
+// ════════════════════════════════════════════════════════════════════
+
+.table-responsive { overflow-x: auto; }
+
+.table-loading {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  padding:     32px 20px;
+  color:       $text-muted;
+  font-size:   14px;
+}
+
+.table-empty {
+  text-align: center;
+  padding:    32px !important;
+  color:      $text-muted;
+  font-size:  14px;
+}
+
+.alert-error-inline {
+  background:    rgba(231,76,60,0.08);
+  border:        1px solid rgba(231,76,60,0.2);
+  border-radius: $radius-md;
+  padding:       12px 16px;
+  font-size:     13px;
+  color:         $danger;
+  margin:        16px;
+}
+
+.tabla-baldrium {
+  width:           100%;
+  border-collapse: separate;
+  border-spacing:  0;
+
+  thead tr {
+    background: linear-gradient(180deg, #E8EAF2 0%, #DDDFE9 100%);
+
+    th {
+      padding:        13px 16px;
+      font-size:      11px;
+      font-weight:    800;
+      color:          #3A3D56;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      text-align:     left;
+      white-space:    nowrap;
+      border-bottom:  2px solid #C8CADE;
+      border-top:     1px solid #E0E2EE;
+
+      &:first-child { padding-left: 20px; }
+      &:last-child  { padding-right: 20px; }
+    }
+  }
+
+  tbody tr {
+    transition: all 0.15s;
+    cursor:     default;
+
+    &.fila-clickable { cursor: pointer; }
+    &:nth-child(odd)  { background: #FFFFFF; }
+    &:nth-child(even) { background: #F5F6FA; }
+    &:last-child td   { border-bottom: none; }
+
+    &:hover {
+      background:  #ECEEF8 !important;
+      box-shadow:  inset 3px 0 0 $gold;
+    }
+
+    td {
+      padding:        14px 16px;
+      font-size:      13px;
+      color:          $text-primary;
+      vertical-align: middle;
+      border-bottom:  1px solid #E8EAF2;
+
+      &:first-child { padding-left: 20px; }
+      &:last-child  { padding-right: 20px; }
+    }
+  }
+}
+
+// ── User cell ─────────────────────────────────────────────────────
+.user-cell {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+}
+
+.user-cell-name {
+  font-size:   13.5px;
+  font-weight: 600;
+  color:       $text-primary;
+  white-space: nowrap;
+}
+
+// ── Celdas ────────────────────────────────────────────────────────
+.td-muted   { color: $text-muted; font-size: 12.5px; white-space: nowrap; }
+.td-fecha   { color: $text-muted; font-size: 12px; white-space: nowrap; font-family: monospace; }
+.td-notas   { color: $text-secondary; font-size: 12.5px; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-pesos   { font-weight: 700; color: $text-primary; font-size: 13px; white-space: nowrap; }
+
+// ── Badge tipo ────────────────────────────────────────────────────
+.badge-tipo {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        3px 10px;
+  border-radius:  $radius-full;
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background:     rgba(100,116,139,0.12);
+  color:          #475569;
+  white-space:    nowrap;
+}
+
+// ── Estado badge ──────────────────────────────────────────────────
+.estado-badge {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            4px;
+  padding:        4px 10px;
+  border-radius:  $radius-full;
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space:    nowrap;
+  cursor:         default;
+
+  &.estado-pendiente   { background: rgba(245,158,11,0.15); color: #D97706; }
+  &.estado-visitado    { background: rgba(39,174,96,0.15);  color: #27AE60; }
+  &.estado-rechaza     { background: rgba(231,76,60,0.15);  color: #E74C3C; }
+  &.estado-nocontesta  { background: rgba(100,116,139,0.15); color: #475569; }
+  &.estado-default     { background: rgba(148,163,184,0.15); color: #64748B; }
+}
+
+// ── Acciones ──────────────────────────────────────────────────────
+.acciones-wrap {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  flex-wrap:   nowrap;
+}
+
+.btn-editar {
+  padding:        7px 14px;
+  background:     $navy-800;
+  color:          $white;
+  border:         none;
+  border-radius:  $radius-sm;
+  font-size:      11px;
+  font-weight:    700;
+  letter-spacing: 0.8px;
+  cursor:         pointer;
+  transition:     background 0.2s;
+  white-space:    nowrap;
+
+  &:hover    { background: $navy-600; }
+  &.btn-comprar {
+    background: linear-gradient(135deg, $gold 0%, $gold-dark 100%);
+    &:hover { background: linear-gradient(135deg, $gold-light 0%, $gold 100%); }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  PAGINACIÓN
+// ════════════════════════════════════════════════════════════════════
+
+.paginacion {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         12px 20px;
+  border-top:      1px solid #D0D3E0;
+  background:      #F0F2F8;
+
+  .pag-info {
+    font-size:   12.5px;
+    font-weight: 500;
+    color:       $text-secondary;
+  }
+
+  .pag-btns {
+    display: flex;
+    gap:     6px;
+
+    button {
+      width:           32px;
+      height:          32px;
+      border-radius:   $radius-sm;
+      border:          1.5px solid #C0C4D8;
+      background:      $white;
+      color:           $navy-800;
+      font-size:       13px;
+      cursor:          pointer;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      transition:      all 0.15s;
+
+      svg { stroke: $navy-800; }
+
+      &:hover:not(:disabled) {
+        background:   $navy-800;
+        border-color: $navy-800;
+        color:        $white;
+        svg { stroke: $white; }
+      }
+
+      &:disabled {
+        opacity:      0.35;
+        cursor:       not-allowed;
+        border-color: #D8DAE8;
+        color:        $text-muted;
+      }
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  HEADER BUTTONS
+// ════════════════════════════════════════════════════════════════════
+
+.btn-accion-primary {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        11px 22px;
+  background:     linear-gradient(135deg, $gold 0%, $gold-dark 100%);
+  border:         none;
+  border-radius:  $radius-md;
+  color:          $white;
+  font-family:    $font-display;
+  font-size:      12px;
+  font-weight:    700;
+  letter-spacing: 1px;
+  cursor:         pointer;
+  transition:     all 0.25s;
+  box-shadow:     0 4px 14px rgba(201,168,76,0.30);
+  text-decoration: none;
+
+  &:hover {
+    transform:  translateY(-1px);
+    box-shadow: 0 6px 20px rgba(201,168,76,0.45);
+    background: linear-gradient(135deg, $gold-light 0%, $gold 100%);
+  }
+
+  &:active { transform: translateY(0); }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════════════════════════════
+
+.modal-card-lg {
+  max-width: 680px;
+}
+
+.modal-tabs {
+  display:     flex;
+  border-bottom: 1px solid $border;
+  background:  #F8F9FC;
+}
+
+.modal-tab {
+  padding:     12px 20px;
+  background:  transparent;
+  border:      none;
+  font-family: $font-body;
+  font-size:   13px;
+  font-weight: 600;
+  color:       $text-muted;
+  cursor:      pointer;
+  border-bottom: 2px solid transparent;
+  transition:  all 0.2s;
+
+  &.active {
+    color:        $navy-800;
+    border-bottom-color: $gold;
+  }
+
+  &:hover:not(.active) {
+    color: $text-primary;
+  }
+}
+
+// ── Detalle grid ──────────────────────────────────────────────────
+.detalle-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   16px 24px;
+  margin-bottom:         20px;
+}
+
+.detalle-item {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+
+  &--full { grid-column: 1 / -1; }
+}
+
+.detalle-label {
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color:          $text-muted;
+}
+
+.detalle-valor {
+  font-size:   14px;
+  color:       $text-primary;
+  font-weight: 500;
+}
+
+.visita-estado-actual {
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+  padding:        16px;
+  background:     #F5F6FA;
+  border-radius:  $radius-md;
+  border:         1px solid $border;
+}
+
+.estado-row {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  flex-wrap:   wrap;
+}
+
+// ── Cambio estado modal ───────────────────────────────────────────
+.estados-grid {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       10px;
+  padding:   4px 0;
+}
+
+.estado-btn {
+  padding:       8px 16px;
+  border-radius: $radius-full;
+  border:        2px solid transparent;
+  font-family:   $font-body;
+  font-size:     12px;
+  font-weight:   700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor:        pointer;
+  transition:    all 0.2s;
+  opacity:       0.55;
+
+  &.selected { opacity: 1; border-width: 2px; }
+
+  &.estado-pendiente  {
+    background: rgba(245,158,11,0.12);
+    color:      #D97706;
+    border-color: transparent;
+    &.selected { border-color: #D97706; background: rgba(245,158,11,0.20); }
+  }
+  &.estado-visitado   {
+    background: rgba(39,174,96,0.12);
+    color:      #27AE60;
+    border-color: transparent;
+    &.selected { border-color: #27AE60; background: rgba(39,174,96,0.20); }
+  }
+  &.estado-rechaza    {
+    background: rgba(231,76,60,0.12);
+    color:      #E74C3C;
+    border-color: transparent;
+    &.selected { border-color: #E74C3C; background: rgba(231,76,60,0.20); }
+  }
+  &.estado-nocontesta {
+    background: rgba(100,116,139,0.12);
+    color:      #475569;
+    border-color: transparent;
+    &.selected { border-color: #475569; background: rgba(100,116,139,0.20); }
+  }
+}
+
+// ── Form group ────────────────────────────────────────────────────
+.form-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+  margin-bottom:  16px;
+
+  label {
+    font-size:      10px;
+    font-weight:    700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color:          $text-muted;
+  }
+}
+
+.form-textarea {
+  padding:       10px 14px;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  color:         $text-primary;
+  resize:        vertical;
+  outline:       none;
+  transition:    border-color 0.2s;
+  background:    $white;
+
+  &:focus { border-color: $gold; }
+  &::placeholder { color: $text-muted; }
+}
+
+// ── Suplementos ───────────────────────────────────────────────────
+.suplementos-grid {
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+}
+
+.suplemento-item {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         10px 14px;
+  background:      #F8F9FC;
+  border:          1px solid $border;
+  border-radius:   $radius-md;
+  gap:             12px;
+}
+
+.suplemento-nombre {
+  flex:        1;
+  font-size:   13px;
+  font-weight: 600;
+  color:       $text-primary;
+}
+
+.suplemento-precio {
+  font-size:   12px;
+  color:       $text-muted;
+  white-space: nowrap;
+}
+
+.suplemento-cantidad {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+
+  span {
+    font-size:   14px;
+    font-weight: 700;
+    color:       $text-primary;
+    min-width:   20px;
+    text-align:  center;
+  }
+
+  button {
+    width:         26px;
+    height:        26px;
+    border-radius: 50%;
+    border:        1.5px solid $border;
+    background:    $white;
+    font-size:     16px;
+    line-height:   1;
+    cursor:        pointer;
+    display:       flex;
+    align-items:   center;
+    justify-content: center;
+    color:         $navy-800;
+    transition:    all 0.15s;
+
+    &:hover {
+      background:   $navy-800;
+      border-color: $navy-800;
+      color:        $white;
+    }
+  }
+}
+
+// ── Selector de estados ───────────────────────────────────────────
+.estados-lista {
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+}
+
+.estado-opcion {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  padding:       12px 16px;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  cursor:        pointer;
+  transition:    all 0.15s;
+  user-select:   none;
+
+  &:hover:not(.selected) {
+    background:   #F8F9FC;
+    border-color: #C5CAD6;
+  }
+
+  &.selected {
+    border-color: $gold;
+    background:   rgba(201,168,76,0.06);
+  }
+}
+
+.estado-radio {
+  width:         16px;
+  height:        16px;
+  border-radius: 50%;
+  border:        2px solid #C0C4D8;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  flex-shrink:   0;
+  transition:    border-color 0.15s;
+
+  .selected & { border-color: $gold; }
+}
+
+.estado-radio-inner {
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  background:    $gold;
+}
+
+.estado-opcion-badge {
+  flex:           1;
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  padding:        5px 14px;
+  border-radius:  $radius-full;
+  font-size:      11px;
+  font-weight:    700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  max-width:      120px;
+
+  &.estado-pendiente  { background: rgba(245,158,11,0.15); color: #D97706; }
+  &.estado-visitado   { background: rgba(39,174,96,0.15);  color: #27AE60; }
+  &.estado-rechaza    { background: rgba(231,76,60,0.15);  color: #E74C3C; }
+  &.estado-nocontesta { background: rgba(100,116,139,0.15); color: #475569; }
+}
+
+.estado-actual-tag {
+  font-size:     10px;
+  font-weight:   600;
+  color:         $text-muted;
+  background:    #F0F2F7;
+  padding:       2px 8px;
+  border-radius: $radius-full;
+  letter-spacing: 0.3px;
+}
+
+// ── Form labels y validación ──────────────────────────────────────
+.form-label {
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color:          $text-muted;
+  display:        block;
+  margin-bottom:  6px;
+}
+
+.form-label-required {
+  color:       $danger;
+  margin-left: 3px;
+}
+
+.form-textarea {
+  &.input-error {
+    border-color: $danger;
+    background:   rgba(231,76,60,0.04);
+  }
+}
+
+.form-hint-error {
+  font-size:  12px;
+  color:      $danger;
+  margin-top: 4px;
+  display:    block;
+}
+
+.form-confirm-hint {
+  font-size:   13px;
+  color:       $text-muted;
+  margin:      4px 0 0;
+  font-style:  italic;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  SCSS ADICIONAL — pega esto al final de clientes.component.scss
+// ════════════════════════════════════════════════════════════════════
+
+// ── Modal XL (compra) ─────────────────────────────────────────────
+.modal-card-xl {
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+// ── Tabs con badge ────────────────────────────────────────────────
+.tab-badge {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  background:      $gold;
+  color:           $white;
+  border-radius:   $radius-full;
+  font-size:       9px;
+  font-weight:     700;
+  width:           16px;
+  height:          16px;
+  margin-left:     5px;
+}
+
+// ── Detalle contacto card ─────────────────────────────────────────
+.detalle-contacto-card {
+  background:    #F8F9FC;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  padding:       16px;
+  margin-bottom: 16px;
+}
+
+.detalle-mono {
+  font-family: monospace;
+  font-size:   13.5px;
+  font-weight: 700;
+}
+
+// ── Productos chips en historial compras ──────────────────────────
+.productos-chips {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       5px;
+}
+
+.producto-chip {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            4px;
+  padding:        3px 9px;
+  background:     rgba(59,130,246,0.10);
+  color:          #3B82F6;
+  border-radius:  $radius-full;
+  font-size:      11px;
+  font-weight:    600;
+  white-space:    nowrap;
+}
+
+.chip-qty {
+  background:    rgba(59,130,246,0.20);
+  border-radius: $radius-full;
+  padding:       1px 5px;
+  font-size:     10px;
+}
+
+// ── Badge estado compra ───────────────────────────────────────────
+.badge-estado-compra {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        3px 10px;
+  border-radius:  $radius-full;
+  font-size:      10px;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+
+  &.compra-pendiente { background: rgba(245,158,11,0.15); color: #D97706; }
+  &.compra-pagada    { background: rgba(39,174,96,0.15);  color: #27AE60; }
+}
+
+// ── Tabla compacta ────────────────────────────────────────────────
+.tabla-compacta {
+  tbody tr td { padding: 10px 16px; }
+}
+
+// ── Form input/select ─────────────────────────────────────────────
+.form-input,
+.form-select {
+  width:         100%;
+  padding:       9px 12px;
+  background:    $white;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  color:         $text-primary;
+  outline:       none;
+  transition:    border-color 0.2s;
+
+  &:focus        { border-color: $gold; }
+  &[readonly]    { background: #F5F6FA; color: $text-muted; cursor: default; }
+  &::placeholder { color: $text-muted; }
+}
+
+.form-group.has-error .form-input,
+.form-group.has-error .form-select {
+  border-color: $danger;
+}
+
+.form-group-full { grid-column: 1 / -1; }
+
+.form-label-optional {
+  font-size:   10px;
+  font-weight: 400;
+  color:       $text-muted;
+  margin-left: 4px;
+  font-style:  italic;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+// ── Compra form grid ──────────────────────────────────────────────
+.compra-form-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   14px;
+  margin-bottom:         20px;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// ── Section header dentro del modal ──────────────────────────────
+.compra-section-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   10px;
+}
+
+.compra-section-title {
+  font-size:      11px;
+  font-weight:    700;
+  color:          $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+// ── Botón añadir ─────────────────────────────────────────────────
+.btn-anadir {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           6px;
+  padding:       6px 14px;
+  background:    transparent;
+  border:        1.5px solid $gold;
+  border-radius: $radius-md;
+  color:         $gold-dark;
+  font-family:   $font-body;
+  font-size:     12px;
+  font-weight:   700;
+  cursor:        pointer;
+  transition:    all 0.2s;
+
+  &:hover {
+    background: rgba(201,168,76,0.08);
+  }
+}
+
+// ── Panel búsqueda producto ───────────────────────────────────────
+.buscar-producto-panel {
+  background:    #F8F9FC;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  padding:       12px;
+  margin-bottom: 12px;
+
+  .form-input { margin-bottom: 8px; }
+}
+
+.buscar-producto-lista {
+  max-height:    200px;
+  overflow-y:    auto;
+  display:       flex;
+  flex-direction: column;
+  gap:           4px;
+}
+
+.buscar-producto-item {
+  display:         flex;
+  align-items:     center;
+  gap:             12px;
+  padding:         8px 12px;
+  background:      $white;
+  border:          1px solid $border;
+  border-radius:   $radius-sm;
+  cursor:          pointer;
+  text-align:      left;
+  transition:      all 0.15s;
+  width:           100%;
+
+  &:hover {
+    border-color: $gold;
+    background:   rgba(201,168,76,0.05);
+  }
+}
+
+.prod-nombre { flex: 1; font-size: 13px; font-weight: 600; color: $text-primary; }
+.prod-precio { font-size: 12px; font-weight: 700; color: $text-primary; white-space: nowrap; }
+.prod-stock  {
+  font-size: 11px; color: $text-muted; white-space: nowrap;
+  &.sin-stock { color: $danger; }
+}
+
+// ── Items compra ──────────────────────────────────────────────────
+.compra-items-wrap {
+  margin-bottom: 8px;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  overflow:      hidden;
+}
+
+.compra-vacio {
+  text-align:    center;
+  padding:       20px;
+  color:         $text-muted;
+  font-size:     13px;
+  border:        1px dashed $border;
+  border-radius: $radius-md;
+  margin-bottom: 12px;
+}
+
+.cantidad-inline {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             8px;
+  justify-content: center;
+}
+
+.cantidad-val {
+  font-size:   14px;
+  font-weight: 700;
+  min-width:   24px;
+  text-align:  center;
+}
+
+.btn-quitar-item {
+  width:           28px;
+  height:          28px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      rgba(231,76,60,0.08);
+  border:          1.5px solid rgba(231,76,60,0.20);
+  border-radius:   $radius-sm;
+  color:           $danger;
+  cursor:          pointer;
+  transition:      all 0.15s;
+
+  &:hover {
+    background:   $danger;
+    border-color: $danger;
+    color:        $white;
+  }
+}
+
+// ── Total compra ──────────────────────────────────────────────────
+.compra-total-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: flex-end;
+  gap:             20px;
+  padding:         12px 16px;
+  background:      #F8F9FC;
+  border:          1px solid $border;
+  border-radius:   $radius-md;
+  margin-bottom:   20px;
+}
+
+.compra-total-label {
+  font-size:      11px;
+  font-weight:    700;
+  color:          $text-muted;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.compra-total-valor {
+  font-family: $font-display;
+  font-size:   20px;
+  font-weight: 800;
+  color:       #27AE60;
+}
+
+// ── Beneficio 4x14 ───────────────────────────────────────────────
+.beneficio-panel {
+  padding:       14px 16px;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  background:    #F8F9FC;
+  margin-bottom: 16px;
+}
+
+.beneficio-toggle {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  cursor:      pointer;
+  user-select: none;
+  margin-bottom: 6px;
+
+  input[type="checkbox"] {
+    width:  16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: $gold;
+  }
+}
+
+.beneficio-label {
+  font-size:   13px;
+  font-weight: 700;
+  color:       $text-primary;
+}
+
+.beneficio-desc {
+  font-size:   12px;
+  color:       $text-muted;
+  margin:      0;
+  padding-left: 26px;
+  line-height: 1.5;
+}
+
+// ── Referidos ─────────────────────────────────────────────────────
+.referidos-panel {
+  margin-bottom: 8px;
+}
+
+.referidos-vacio {
+  color:     $text-muted;
+  font-size: 13px;
+  padding:   10px 0;
+}
+
+.referidos-contador {
+  color:       $text-muted;
+  font-weight: 500;
+
+  &.ok { color: #27AE60; }
+}
+
+.referido-item {
+  display:       grid;
+  grid-template-columns: 28px 1fr 1fr 1fr 28px;
+  gap:           8px;
+  align-items:   center;
+  margin-bottom: 8px;
+}
+
+.referido-num {
+  font-size:   11px;
+  font-weight: 700;
+  color:       $text-muted;
+  text-align:  center;
+}
+
+// ── Aviso warning ─────────────────────────────────────────────────
+.modal-nota-warning {
+  background:    rgba(245,158,11,0.08) !important;
+  border-color:  rgba(245,158,11,0.30) !important;
+  color:         #D97706 !important;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  SCSS ADICIONAL — pega al final de clientes.component.scss
+// ════════════════════════════════════════════════════════════════════
+
+// ── Modal detalle (una vista) ─────────────────────────────────────
+.modal-card-detalle {
+  max-width:  780px;   // ← de 680px a 780px
+  width:      95vw;    // ← ocupa casi todo el ancho disponible
+  max-height: 88vh;
+  display:    flex;
+  flex-direction: column;
+}
+
+.modal-body-scroll {
+  overflow-y: auto;
+  flex:       1;
+}
+
+// ── Título de sección dentro del modal ───────────────────────────
+.detalle-seccion-title {
+  display:         flex;
+  align-items:     center;
+  gap:             12px;
+  font-size:       10px;
+  font-weight:     800;
+  color:           $text-muted;
+  letter-spacing:  0.8px;
+  text-transform:  uppercase;
+  margin-bottom:   16px;
+}
+
+.detalle-seccion-line {
+  flex:            1;
+  height:          1px;
+  background:      $border;
+}
+
+// ── Grid de campos editables ──────────────────────────────────────
+.detalle-form-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   14px;
+  margin-bottom:         20px;
+
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+}
+
+.detalle-field {
+  display:        flex;
+  flex-direction: column;
+  gap:            5px;
+}
+
+.detalle-field-label {
+  font-size:      10px;
+  font-weight:    700;
+  color:          $text-muted;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.detalle-field-input {
+  padding:       9px 12px;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  color:         $text-primary;
+  background:    $white;
+  outline:       none;
+  transition:    border-color 0.2s;
+  width:         100%;
+
+  &:focus        { border-color: $gold; }
+  &[readonly]    { background: #F5F6FA; color: $text-secondary; cursor: default; }
+  &::placeholder { color: $text-muted; }
+}
+
+// ── Estado de la visita en el detalle ────────────────────────────
+.detalle-estado-row {
+  padding:       14px 16px;
+  background:    #F8F9FC;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  margin-bottom: 8px;
+}
+
+// ── Tabla dentro del modal detalle ────────────────────────────────
+.tabla-detalle {
+  margin-bottom: 8px;
+
+  thead th { font-size: 10px; padding: 10px 14px; }
+  tbody td  { padding: 11px 14px; font-size: 12.5px; }
+}
+
+.td-productos {
+  font-size:     12.5px;
+  color:         $text-secondary;
+  max-width:     200px;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  cursor:        default;  // ← muestra el title al hover
+}
+
+// ── Empty dentro del modal ────────────────────────────────────────
+.detalle-empty {
+  color:     $text-muted;
+  font-size: 13px;
+  padding:   12px 0;
+}
+
+// ── Badge estado compra ───────────────────────────────────────────
+.badge-estado-compra {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        3px 10px;
+  border-radius:  $radius-full;
+  font-size:      10px;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+
+  &.compra-pendiente { background: rgba(245,158,11,0.15); color: #D97706; }
+  &.compra-pagada    { background: rgba(39,174,96,0.15);  color: #27AE60; }
+}
+
+// ── Modal XL (compra) ─────────────────────────────────────────────
+.modal-card-xl {
+  max-width:  720px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+// ── Form inputs ───────────────────────────────────────────────────
+.form-input,
+.form-select {
+  width:         100%;
+  padding:       9px 12px;
+  background:    $white;
+  border:        1.5px solid $border;
+  border-radius: $radius-md;
+  font-family:   $font-body;
+  font-size:     13px;
+  color:         $text-primary;
+  outline:       none;
+  transition:    border-color 0.2s;
+
+  &:focus        { border-color: $gold; }
+  &[readonly]    { background: #F5F6FA; color: $text-muted; cursor: default; }
+  &::placeholder { color: $text-muted; }
+}
+
+.form-group.has-error .form-input,
+.form-group.has-error .form-select { border-color: $danger; }
+
+.form-group-full { grid-column: 1 / -1; }
+
+.form-label-optional {
+  font-size:      10px;
+  font-weight:    400;
+  color:          $text-muted;
+  margin-left:    4px;
+  font-style:     italic;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+// ── Compra form grid ──────────────────────────────────────────────
+.compra-form-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   14px;
+  margin-bottom:         20px;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// ── Section header dentro del modal ──────────────────────────────
+.compra-section-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   10px;
+}
+
+.compra-section-title {
+  font-size:      11px;
+  font-weight:    700;
+  color:          $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+// ── Botón añadir ─────────────────────────────────────────────────
+.btn-anadir {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           6px;
+  padding:       6px 14px;
+  background:    transparent;
+  border:        1.5px solid $gold;
+  border-radius: $radius-md;
+  color:         $gold-dark;
+  font-family:   $font-body;
+  font-size:     12px;
+  font-weight:   700;
+  cursor:        pointer;
+  transition:    all 0.2s;
+
+  &:hover { background: rgba(201,168,76,0.08); }
+}
+
+// ── Panel búsqueda producto ───────────────────────────────────────
+.buscar-producto-panel {
+  background:    #F8F9FC;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  padding:       12px;
+  margin-bottom: 12px;
+
+  .form-input { margin-bottom: 8px; }
+}
+
+.buscar-producto-lista {
+  max-height:     200px;
+  overflow-y:     auto;
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.buscar-producto-item {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  padding:     8px 12px;
+  background:  $white;
+  border:      1px solid $border;
+  border-radius: $radius-sm;
+  cursor:      pointer;
+  text-align:  left;
+  transition:  all 0.15s;
+  width:       100%;
+
+  &:hover { border-color: $gold; background: rgba(201,168,76,0.05); }
+}
+
+.prod-nombre { flex: 1; font-size: 13px; font-weight: 600; color: $text-primary; }
+.prod-precio { font-size: 12px; font-weight: 700; color: $text-primary; white-space: nowrap; }
+.prod-stock  {
+  font-size: 11px; color: $text-muted; white-space: nowrap;
+  &.sin-stock { color: $danger; }
+}
+
+// ── Items compra ──────────────────────────────────────────────────
+.compra-items-wrap {
+  margin-bottom: 8px;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  overflow:      hidden;
+}
+
+.compra-vacio {
+  text-align:    center;
+  padding:       20px;
+  color:         $text-muted;
+  font-size:     13px;
+  border:        1px dashed $border;
+  border-radius: $radius-md;
+  margin-bottom: 12px;
+}
+
+.tabla-compacta tbody tr td { padding: 10px 16px; }
+
+.cantidad-inline {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             8px;
+  justify-content: center;
+}
+
+.cantidad-val {
+  font-size:  14px;
+  font-weight: 700;
+  min-width:  24px;
+  text-align: center;
+}
+
+.btn-quitar-item {
+  width:           28px;
+  height:          28px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      rgba(231,76,60,0.08);
+  border:          1.5px solid rgba(231,76,60,0.20);
+  border-radius:   $radius-sm;
+  color:           $danger;
+  cursor:          pointer;
+  transition:      all 0.15s;
+
+  &:hover { background: $danger; border-color: $danger; color: $white; }
+}
+
+// ── Total compra ──────────────────────────────────────────────────
+.compra-total-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: flex-end;
+  gap:             20px;
+  padding:         12px 16px;
+  background:      #F8F9FC;
+  border:          1px solid $border;
+  border-radius:   $radius-md;
+  margin-bottom:   20px;
+}
+
+.compra-total-label {
+  font-size:      11px;
+  font-weight:    700;
+  color:          $text-muted;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.compra-total-valor {
+  font-family: $font-display;
+  font-size:   20px;
+  font-weight: 800;
+  color:       #27AE60;
+}
+
+// ── Beneficio 4x14 ───────────────────────────────────────────────
+.beneficio-panel {
+  padding:       14px 16px;
+  border:        1px solid $border;
+  border-radius: $radius-md;
+  background:    #F8F9FC;
+  margin-bottom: 16px;
+}
+
+.beneficio-toggle {
+  display:       flex;
+  align-items:   center;
+  gap:           10px;
+  cursor:        pointer;
+  user-select:   none;
+  margin-bottom: 6px;
+
+  input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: $gold; }
+}
+
+.beneficio-label { font-size: 13px; font-weight: 700; color: $text-primary; }
+.beneficio-desc  { font-size: 12px; color: $text-muted; margin: 0; padding-left: 26px; line-height: 1.5; }
+
+// ── Referidos ─────────────────────────────────────────────────────
+.referidos-panel     { margin-bottom: 8px; }
+.referidos-vacio     { color: $text-muted; font-size: 13px; padding: 10px 0; }
+.referidos-contador  { color: $text-muted; font-weight: 500; &.ok { color: #27AE60; } }
+
+.referido-item {
+  display:               grid;
+  grid-template-columns: 28px 1fr 1fr 1fr 28px;
+  gap:                   8px;
+  align-items:           center;
+  margin-bottom:         8px;
+}
+
+.referido-num { font-size: 11px; font-weight: 700; color: $text-muted; text-align: center; }
+
+// ── Aviso warning ─────────────────────────────────────────────────
+.modal-nota-warning {
+  background:  rgba(245,158,11,0.08) !important;
+  border-color: rgba(245,158,11,0.30) !important;
+  color:       #D97706 !important;
+}
+
+// ── Footer left para errores ──────────────────────────────────────
+.modal-footer-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
