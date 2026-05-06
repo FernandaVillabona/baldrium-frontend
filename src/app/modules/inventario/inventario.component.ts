@@ -9,7 +9,8 @@ import {
   AuditoriaInventarioItem, TIPOS_INVENTARIO
 } from './inventario.service';
 
-type ModalMode = 'crear' | 'editar' | null;
+type ModalMode  = 'crear' | 'editar' | null;
+type TabActivo  = 'inventario' | 'movimientos';
 
 @Component({
   selector:    'app-inventario',
@@ -33,6 +34,9 @@ export class InventarioComponent implements OnInit {
   error          = '';
   errorModal     = '';
   errorEliminar  = '';
+
+  // ── Tab ───────────────────────────────────────────────────────────
+  tabActivo: TabActivo = 'inventario';
 
   // ── Paginación productos ───────────────────────────────────────────
   paginaActual   = 1;
@@ -58,9 +62,9 @@ export class InventarioComponent implements OnInit {
   filtroAudFechaHasta     = '';
 
   // ── Modal crear/editar ─────────────────────────────────────────────
-  modalMode:           ModalMode    = null;
+  modalMode:            ModalMode    = null;
   productoSeleccionado: Producto | null = null;
-  form!:               FormGroup;
+  form!:                FormGroup;
 
   // ── Modal eliminar ─────────────────────────────────────────────────
   mostrarConfirmEliminar = false;
@@ -99,9 +103,17 @@ export class InventarioComponent implements OnInit {
     });
 
     this.svc.listarAuditoria().subscribe({
-      next: (a) => this.auditoria = a,
-      error: () => {}
+      next:  (a) => this.auditoria = a,
+      error: ()  => {}
     });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  //  TAB
+  // ════════════════════════════════════════════════════════════════════
+
+  cambiarTab(tab: TabActivo): void {
+    this.tabActivo = tab;
   }
 
   // ════════════════════════════════════════════════════════════════════
@@ -239,10 +251,10 @@ export class InventarioComponent implements OnInit {
   }
 
   limpiarFiltros(): void {
-    this.filtroTipo   = '';
-    this.filtroStock  = '';
-    this.filtroOrden  = '';
-    this.busqueda     = '';
+    this.filtroTipo  = '';
+    this.filtroStock = '';
+    this.filtroOrden = '';
+    this.busqueda    = '';
     this.aplicarFiltros();
   }
 
@@ -251,12 +263,12 @@ export class InventarioComponent implements OnInit {
   }
 
   limpiarFiltrosAuditoria(): void {
-    this.filtroAudTipo        = '';
-    this.filtroAudMotivo      = '';
-    this.filtroAudFechaDesde  = '';
-    this.filtroAudFechaHasta  = '';
-    this.busquedaAuditoria    = '';
-    this.paginaAuditoria      = 1;
+    this.filtroAudTipo       = '';
+    this.filtroAudMotivo     = '';
+    this.filtroAudFechaDesde = '';
+    this.filtroAudFechaHasta = '';
+    this.busquedaAuditoria   = '';
+    this.paginaAuditoria     = 1;
   }
 
   // ════════════════════════════════════════════════════════════════════
@@ -331,7 +343,7 @@ export class InventarioComponent implements OnInit {
 
   abrirConfirmEliminar(p: Producto, event: Event): void {
     event.stopPropagation();
-    this.productoAEliminar     = p;
+    this.productoAEliminar      = p;
     this.mostrarConfirmEliminar = true;
     this.errorEliminar          = '';
   }
@@ -439,14 +451,14 @@ export class InventarioComponent implements OnInit {
   // ════════════════════════════════════════════════════════════════════
 
   getEstadoStock(cantidad: number): string {
-    if (cantidad === 0)      return 'Sin Stock';
-    if (cantidad <= 5)       return 'Bajo Stock';
+    if (cantidad === 0) return 'Sin Stock';
+    if (cantidad <= 5)  return 'Bajo Stock';
     return 'Disponible';
   }
 
   getEstadoStockClass(cantidad: number): string {
-    if (cantidad === 0)      return 'sin-stock';
-    if (cantidad <= 5)       return 'bajo-stock';
+    if (cantidad === 0) return 'sin-stock';
+    if (cantidad <= 5)  return 'bajo-stock';
     return 'disponible';
   }
 
@@ -488,11 +500,12 @@ export class InventarioComponent implements OnInit {
   }
 
   getInicialesResponsable(nombre: string): string {
-  if (!nombre) return '?';
-  return nombre.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
-}
-getPrimeraLetra(nombre: string): string {
-  if (!nombre) return 'A';
-  return nombre[0].toUpperCase();
-}
+    if (!nombre) return '?';
+    return nombre.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+  }
+
+  getPrimeraLetra(nombre: string): string {
+    if (!nombre) return 'A';
+    return nombre[0].toUpperCase();
+  }
 }

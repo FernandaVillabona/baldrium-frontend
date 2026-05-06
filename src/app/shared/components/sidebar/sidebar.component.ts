@@ -13,13 +13,13 @@ export interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Usuarios',     ruta: '/usuarios',    icono: 'users',     roles: ['Director'] },
-  { label: 'Visitas',     ruta: '/clientes',    icono: 'clientes',  roles: ['Director','Coordinador','Auxiliar Administrativo','Asesor comercial'] },
-  { label: 'Inventario',   ruta: '/inventario',  icono: 'inventory', roles: ['Director','Coordinador'] },
-  { label: 'Compras',      ruta: '/compras',     icono: 'compras',   roles: ['Director','Coordinador','Asesor comercial'] },
-  { label: 'Telemercadeo', ruta: '/telemercadeo',icono: 'phone',     roles: ['Director','Coordinador','Auxiliar Administrativo','Asesor comercial','Telemercaderista'] },
-  { label: 'Beneficios',   ruta: '/beneficios',  icono: 'gift',      roles: ['Director','Coordinador','Auxiliar Administrativo','Asesor comercial'] },
-  { label: 'Reporte',      ruta: '/reporte',     icono: 'report',    roles: ['Director'] }
+  { label: 'Usuarios',     ruta: '/usuarios',     icono: 'users',     roles: ['Director'] },
+  { label: 'Visitas',      ruta: '/clientes',     icono: 'clientes',  roles: ['Coordinador','Auxiliar Administrativo','Asesor comercial'] },
+  { label: 'Inventario',   ruta: '/inventario',   icono: 'inventory', roles: ['Coordinador'] },
+  { label: 'Compras',      ruta: '/compras',      icono: 'compras',   roles: ['Coordinador','Asesor comercial'] },
+  { label: 'Telemercadeo', ruta: '/telemercadeo', icono: 'phone',     roles: ['Coordinador','Auxiliar Administrativo','Asesor comercial','Telemercaderista'] },
+  { label: 'Beneficios',   ruta: '/beneficios',   icono: 'gift',      roles: ['Coordinador','Auxiliar Administrativo','Asesor comercial'] },
+  { label: 'Reporte',      ruta: '/reporte',      icono: 'report',    roles: ['Director'] }
 ];
 
 @Component({
@@ -46,18 +46,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  ngOnInit(): void {
-    // Refiltrar nav items cuando cambie el usuario (nombre, roles, etc.)
-    this.auth.usuario$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.filtrarItems());
+ngOnInit(): void {
+  this.filtrarItems();
 
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd), takeUntil(this.destroy$))
-      .subscribe((e: any) => { this.rutaActual = e.urlAfterRedirects; });
+  this.auth.usuario$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => this.filtrarItems());
 
-    this.rutaActual = this.router.url;
-  }
+  this.router.events
+    .pipe(filter(e => e instanceof NavigationEnd), takeUntil(this.destroy$))
+    .subscribe((e: any) => { this.rutaActual = e.urlAfterRedirects; });
+
+  this.rutaActual = this.router.url;
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();

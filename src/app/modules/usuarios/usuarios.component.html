@@ -5,95 +5,117 @@
       <h1>Usuarios</h1>
       <p>Gestiona los usuarios del sistema y consulta la auditoría de acciones</p>
     </div>
-<div class="page-header-actions">
-  <button class="btn-accion-primary" (click)="abrirCrear()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2.5">
-      <line x1="12" y1="5" x2="12" y2="19"/>
-      <line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-    AÑADIR USUARIO
-  </button>
-
-</div>
-  </div>
-
-  <!-- Tabla usuarios -->
-  <div class="card-section">
-<div class="section-header">
-  <h2>Gestión de Dirección Institucional</h2>
-  <div class="section-header-right">
-    <div class="search-wrap">
-      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Buscar usuario..."
-        [(ngModel)]="busqueda"
-        (input)="onBuscar()"
-      />
-    </div>
-    <button class="btn-filtro" (click)="toggleFiltros()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2">
-        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-      </svg>
-      Filtros
-      <span class="filtro-badge" *ngIf="filtrosActivos > 0">
-        {{ filtrosActivos }}
-      </span>
-    </button>
-    <!-- ← Exportar ahora va aquí -->
-    <button class="btn-filtro" (click)="exportarPDF()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      Exportar
-    </button>
-  </div>
-</div>
-
-<!-- Panel de filtros -->
-<div class="filtros-panel" *ngIf="mostrarFiltros">
-  <div class="filtros-grid">
-    <div class="filtro-group">
-      <label>ROL</label>
-      <select [(ngModel)]="filtroRol" (change)="aplicarFiltros()">
-        <option value="">Todos los roles</option>
-        <option *ngFor="let r of roles" [value]="r.nombre">{{ r.nombre }}</option>
-      </select>
-    </div>
-    <div class="filtro-group">
-      <label>ESTADO</label>
-      <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
-        <option value="">Todos</option>
-        <option value="activo">Activo</option>
-        <option value="inactivo">Inactivo</option>
-      </select>
-    </div>
-    <div class="filtro-group">
-      <label>ORDENAR POR</label>
-      <select [(ngModel)]="filtroOrden" (change)="aplicarFiltros()">
-        <option value="">Sin orden</option>
-        <option value="nombre-asc">Nombre A→Z</option>
-        <option value="nombre-desc">Nombre Z→A</option>
-        <option value="actividad">Última actividad</option>
-      </select>
-    </div>
-    <div class="filtro-actions">
-      <button class="btn btn-secondary btn-sm" (click)="limpiarFiltros()">
-        Limpiar filtros
+    <div class="page-header-actions">
+      <button class="btn-accion-primary" (click)="abrirCrear()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        AÑADIR USUARIO
       </button>
     </div>
   </div>
-</div>
+
+  <!-- ── Tabs ─────────────────────────────────────────────────────────── -->
+  <div class="tabs-wrap">
+    <button class="tab-btn" [class.active]="tabActivo === 'usuarios'" (click)="cambiarTab('usuarios')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <line x1="23" y1="11" x2="17" y2="11"/>
+        <line x1="20" y1="8" x2="20" y2="14"/>
+      </svg>
+      Usuarios
+      <span class="tab-count" *ngIf="!cargando">{{ trabajadoresFiltrados.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="tabActivo === 'auditoria'" (click)="cambiarTab('auditoria')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+      Auditoría
+      <span class="tab-count" *ngIf="auditoria.length > 0">{{ auditoriaFiltrada.length }}</span>
+    </button>
+  </div>
+
+  <!-- ── Tabla usuarios ──────────────────────────────────────────────── -->
+  <div class="card-section" *ngIf="tabActivo === 'usuarios'">
+    <div class="section-header">
+      <h2>Gestión de Dirección Institucional</h2>
+      <div class="section-header-right">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar usuario..."
+            [(ngModel)]="busqueda"
+            (input)="onBuscar()"
+          />
+        </div>
+        <button class="btn-filtro" (click)="toggleFiltros()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtros
+          <span class="filtro-badge" *ngIf="filtrosActivos > 0">
+            {{ filtrosActivos }}
+          </span>
+        </button>
+        <button class="btn-filtro" (click)="exportarPDF()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exportar
+        </button>
+      </div>
+    </div>
+
+    <!-- Panel de filtros -->
+    <div class="filtros-panel" *ngIf="mostrarFiltros">
+      <div class="filtros-grid">
+        <div class="filtro-group">
+          <label>ROL</label>
+          <select [(ngModel)]="filtroRol" (change)="aplicarFiltros()">
+            <option value="">Todos los roles</option>
+            <option *ngFor="let r of roles" [value]="r.nombre">{{ r.nombre }}</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>ESTADO</label>
+          <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+            <option value="">Todos</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>ORDENAR POR</label>
+          <select [(ngModel)]="filtroOrden" (change)="aplicarFiltros()">
+            <option value="">Sin orden</option>
+            <option value="nombre-asc">Nombre A→Z</option>
+            <option value="nombre-desc">Nombre Z→A</option>
+            <option value="actividad">Última actividad</option>
+          </select>
+        </div>
+        <div class="filtro-actions">
+          <button class="btn btn-secondary btn-sm" (click)="limpiarFiltros()">
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
+    </div>
 
     <div class="table-loading" *ngIf="cargando">
       <span class="spinner spinner-dark"></span>
@@ -104,282 +126,281 @@
       {{ error }}
     </div>
 
-<div class="table-responsive" *ngIf="!cargando && !error">
-  <table class="tabla-baldrium">
-    <thead>
-      <tr>
-        <th>CÉDULA</th>
-        <th>USUARIO</th>
-        <th>CORREO ELECTRÓNICO</th>
-        <th>CELULAR</th>
-        <th>ROLES</th>
-        <th>ESTADO</th>
-        <th>ACCIÓN</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of paginados">
+    <div class="table-responsive" *ngIf="!cargando && !error">
+      <table class="tabla-baldrium">
+        <thead>
+          <tr>
+            <th>CÉDULA</th>
+            <th>USUARIO</th>
+            <th>CORREO ELECTRÓNICO</th>
+            <th>CELULAR</th>
+            <th>ROLES</th>
+            <th>ESTADO</th>
+            <th>ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of paginados">
 
-        <!-- Cédula -->
-        <td class="td-cedula">{{ t.cedula }}</td>
+            <!-- Cédula -->
+            <td class="td-cedula">{{ t.cedula }}</td>
 
-        <!-- Usuario -->
-        <td>
-          <div class="user-cell">
-            <div class="avatar-initials avatar-{{ getPrimeraLetra(t.nombre) }}">
-              {{ getIniciales(t.nombre) }}
-            </div>
-            <div class="user-cell-info">
-              <span class="user-cell-name">{{ t.nombre }}</span>
-              <span class="user-cell-id">ID: {{ t.codigoTrabajador }}</span>
-            </div>
-          </div>
-        </td>
+            <!-- Usuario -->
+            <td>
+              <div class="user-cell">
+                <div class="avatar-initials avatar-{{ getPrimeraLetra(t.nombre) }}">
+                  {{ getIniciales(t.nombre) }}
+                </div>
+                <div class="user-cell-info">
+                  <span class="user-cell-name">{{ t.nombre }}</span>
+                  <span class="user-cell-id">ID: {{ t.codigoTrabajador }}</span>
+                </div>
+              </div>
+            </td>
 
-        <!-- Correo -->
-        <td class="td-correo">{{ t.correo }}</td>
+            <!-- Correo -->
+            <td class="td-correo">{{ t.correo }}</td>
 
-        <!-- Celular -->
-        <td class="td-muted">{{ t.celular }}</td>
+            <!-- Celular -->
+            <td class="td-muted">{{ t.celular }}</td>
 
-        <!-- Roles -->
-        <td>
-          <div class="roles-wrap">
-            <span *ngFor="let r of t.roles"
-                  class="badge-rol"
-                  [ngClass]="getRolClass(r.nombre)">
-              {{ r.nombre }}
-            </span>
-          </div>
-        </td>
+            <!-- Roles -->
+            <td>
+              <div class="roles-wrap">
+                <span *ngFor="let r of t.roles"
+                      class="badge-rol"
+                      [ngClass]="getRolClass(r.nombre)">
+                  {{ r.nombre }}
+                </span>
+              </div>
+            </td>
 
-        <!-- Estado -->
-        <td>
-          <span class="estado-badge"
-                [ngClass]="t.activo ? 'activo' : 'inactivo'">
-            {{ t.activo ? 'Activo' : 'Inactivo' }}
+            <!-- Estado -->
+            <td>
+              <span class="estado-badge"
+                    [ngClass]="t.activo ? 'activo' : 'inactivo'">
+                {{ t.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+
+            <!-- Acciones -->
+            <td>
+              <div class="acciones-wrap">
+                <button class="btn-editar" (click)="abrirEditar(t)">
+                  EDITAR
+                </button>
+                <button class="btn-eliminar"
+                        (click)="abrirConfirmEliminar(t, $event)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          <tr *ngIf="paginados.length === 0">
+            <td colspan="7" class="table-empty">No se encontraron usuarios</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="paginacion">
+        <span class="pag-info">
+          Mostrando {{ paginados.length }} de {{ trabajadoresFiltrados.length }} usuarios
+        </span>
+        <div class="pag-btns">
+          <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <button (click)="paginaSiguiente()"
+                  [disabled]="paginaActual === totalPaginas || totalPaginas === 0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Auditoría ──────────────────────────────────────────────────── -->
+  <div class="card-section" *ngIf="tabActivo === 'auditoria'">
+    <div class="section-header">
+      <h2>Historial de Actividad del Sistema</h2>
+      <div class="section-header-right">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar acción, trabajador..."
+            [(ngModel)]="busquedaAuditoria"
+          />
+        </div>
+        <button class="btn-filtro" (click)="toggleFiltrosAuditoria()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtros
+          <span class="filtro-badge" *ngIf="filtrosAuditoriaActivos > 0">
+            {{ filtrosAuditoriaActivos }}
           </span>
-        </td>
-
-        <!-- Acciones -->
-        <td>
-          <div class="acciones-wrap">
-            <button class="btn-editar" (click)="abrirEditar(t)">
-              EDITAR
-            </button>
-            <button class="btn-eliminar"
-                    (click)="abrirConfirmEliminar(t, $event)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                <path d="M10 11v6M14 11v6"/>
-                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-              </svg>
-            </button>
-          </div>
-        </td>
-
-      </tr>
-      <tr *ngIf="paginados.length === 0">
-        <td colspan="7" class="table-empty">No se encontraron usuarios</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="paginacion">
-    <span class="pag-info">
-      Mostrando {{ paginados.length }} de {{ trabajadoresFiltrados.length }} usuarios
-    </span>
-    <div class="pag-btns">
-      <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </button>
-      <button (click)="paginaSiguiente()"
-              [disabled]="paginaActual === totalPaginas || totalPaginas === 0">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
-  </div>
-
-  <!-- Auditoría -->
-<!-- Auditoría -->
-<div class="card-section">
-<div class="section-header">
-  <h2>Historial de Actividad del Sistema</h2>
-  <div class="section-header-right">
-    <div class="search-wrap">
-      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Buscar acción, trabajador..."
-        [(ngModel)]="busquedaAuditoria"
-      />
-    </div>
-    <button class="btn-filtro" (click)="toggleFiltrosAuditoria()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2">
-        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-      </svg>
-      Filtros
-      <span class="filtro-badge" *ngIf="filtrosAuditoriaActivos > 0">
-        {{ filtrosAuditoriaActivos }}
-      </span>
-    </button>
-    <button class="btn-filtro" (click)="exportarAuditoriaPDF()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      Exportar
-    </button>
-  </div>
-</div>
-
-<!-- Panel filtros auditoría -->
-<div class="filtros-panel" *ngIf="mostrarFiltrosAuditoria">
-  <div class="filtros-grid">
-    <div class="filtro-group">
-      <label>ACCIÓN</label>
-      <select [(ngModel)]="filtroAudAccion" (change)="paginaAuditoria = 1">
-        <option value="">Todas</option>
-        <option value="LOGIN">Login</option>
-        <option value="LOGIN_FALLIDO">Login Fallido</option>
-        <option value="CREAR">Crear</option>
-        <option value="EDITAR">Editar</option>
-        <option value="ELIMINAR">Eliminar</option>
-        <option value="CAMBIO_CONTRASENA">Cambio Contraseña</option>
-        <option value="ACTIVAR">Activar</option>
-        <option value="DESACTIVAR">Desactivar</option>
-      </select>
-    </div>
-    <div class="filtro-group">
-      <label>RESULTADO</label>
-      <select [(ngModel)]="filtroAudResultado" (change)="paginaAuditoria = 1">
-        <option value="">Todos</option>
-        <option value="EXITOSO">Exitoso</option>
-        <option value="FALLIDO">Fallido</option>
-      </select>
-    </div>
-    <div class="filtro-group">
-      <label>FECHA DESDE</label>
-      <input type="date" [(ngModel)]="filtroAudFechaDesde"
-             (change)="paginaAuditoria = 1" />
-    </div>
-    <div class="filtro-group">
-      <label>FECHA HASTA</label>
-      <input type="date" [(ngModel)]="filtroAudFechaHasta"
-             (change)="paginaAuditoria = 1" />
-    </div>
-    <div class="filtro-actions">
-      <button class="btn btn-secondary btn-sm"
-              (click)="limpiarFiltrosAuditoria()">
-        Limpiar
-      </button>
-    </div>
-  </div>
-</div>
-
-  <div class="table-responsive">
-    <table class="tabla-baldrium">
-      <thead>
-        <tr>
-          <th>FECHA Y HORA</th>
-          <th>ACCIÓN</th>
-          <th>TRABAJADOR</th>
-          <th>MÓDULO</th>
-          <th>RESULTADO</th>
-          <th>DESCRIPCIÓN</th>
-          <th>DISPOSITIVO</th>
-        </tr>
-      </thead>
-      <tbody>
-<tr *ngFor="let a of auditoriaPaginada">
-  <td class="td-fecha">{{ formatearFecha(a.FechaHora) }}</td>
-  <td>
-    <span class="badge-accion" [ngClass]="getAccionClass(a.TipoAccion)">
-      {{ a.TipoAccion }}
-    </span>
-  </td>
-  <td>
-    <div class="user-cell">
-      <div class="avatar-initials avatar-initials-sm
-           avatar-{{ getPrimeraLetra(a.NombreTrabajador) }}">
-        {{ getIniciales(a.NombreTrabajador) }}
-      </div>
-      <div class="user-cell-info">
-        <span class="user-cell-name">{{ a.NombreTrabajador }}</span>
-        <span class="user-cell-id">{{ a.CedulaTrabajador }}</span>
-      </div>
-    </div>
-  </td>
-  <td class="td-muted">{{ a.TablaAfectada || '—' }}</td>
-  <td>
-    <span class="badge-resultado"
-          [ngClass]="a.Resultado === 'EXITOSO' ? 'exitoso' : 'fallido'">
-      {{ a.Resultado }}
-    </span>
-  </td>
-  <td class="td-descripcion">{{ a.Descripcion }}</td>
- <td class="td-dispositivo">
-  <ng-container *ngIf="a.Dispositivo; else sinDispositivo">
-    <span class="dispositivo-nombre">
-      {{ parsearDispositivo(a.Dispositivo).navegador }}
-    </span>
-    <span class="dispositivo-os">
-      {{ parsearDispositivo(a.Dispositivo).os }}
-    </span>
-  </ng-container>
-  <ng-template #sinDispositivo>
-    <span class="td-muted">—</span>
-  </ng-template>
-</td>
-</tr>
-        <tr *ngIf="auditoriaPaginada.length === 0">
-          <td colspan="7" class="table-empty">Sin actividad registrada</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="paginacion">
-      <span class="pag-info">
-        Mostrando {{ auditoriaPaginada.length }} de
-        {{ auditoriaFiltrada.length }} registros
-      </span>
-      <div class="pag-btns">
-        <button (click)="paginaAuditoria = paginaAuditoria - 1"
-                [disabled]="paginaAuditoria === 1">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
         </button>
-        <button (click)="paginaAuditoria = paginaAuditoria + 1"
-                [disabled]="paginaAuditoria === totalPaginasAuditoria">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+        <button class="btn-filtro" (click)="exportarAuditoriaPDF()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6"/>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
+          Exportar
         </button>
       </div>
     </div>
+
+    <!-- Panel filtros auditoría -->
+    <div class="filtros-panel" *ngIf="mostrarFiltrosAuditoria">
+      <div class="filtros-grid">
+        <div class="filtro-group">
+          <label>ACCIÓN</label>
+          <select [(ngModel)]="filtroAudAccion" (change)="paginaAuditoria = 1">
+            <option value="">Todas</option>
+            <option value="LOGIN">Login</option>
+            <option value="LOGIN_FALLIDO">Login Fallido</option>
+            <option value="CREAR">Crear</option>
+            <option value="EDITAR">Editar</option>
+            <option value="ELIMINAR">Eliminar</option>
+            <option value="CAMBIO_CONTRASENA">Cambio Contraseña</option>
+            <option value="ACTIVAR">Activar</option>
+            <option value="DESACTIVAR">Desactivar</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>RESULTADO</label>
+          <select [(ngModel)]="filtroAudResultado" (change)="paginaAuditoria = 1">
+            <option value="">Todos</option>
+            <option value="EXITOSO">Exitoso</option>
+            <option value="FALLIDO">Fallido</option>
+          </select>
+        </div>
+        <div class="filtro-group">
+          <label>FECHA DESDE</label>
+          <input type="date" [(ngModel)]="filtroAudFechaDesde"
+                 (change)="paginaAuditoria = 1" />
+        </div>
+        <div class="filtro-group">
+          <label>FECHA HASTA</label>
+          <input type="date" [(ngModel)]="filtroAudFechaHasta"
+                 (change)="paginaAuditoria = 1" />
+        </div>
+        <div class="filtro-actions">
+          <button class="btn btn-secondary btn-sm"
+                  (click)="limpiarFiltrosAuditoria()">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="tabla-baldrium">
+        <thead>
+          <tr>
+            <th>FECHA Y HORA</th>
+            <th>ACCIÓN</th>
+            <th>TRABAJADOR</th>
+            <th>MÓDULO</th>
+            <th>RESULTADO</th>
+            <th>DESCRIPCIÓN</th>
+            <th>DISPOSITIVO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of auditoriaPaginada">
+            <td class="td-fecha">{{ formatearFecha(a.FechaHora) }}</td>
+            <td>
+              <span class="badge-accion" [ngClass]="getAccionClass(a.TipoAccion)">
+                {{ a.TipoAccion }}
+              </span>
+            </td>
+            <td>
+              <div class="user-cell">
+                <div class="avatar-initials avatar-initials-sm
+                     avatar-{{ getPrimeraLetra(a.NombreTrabajador) }}">
+                  {{ getIniciales(a.NombreTrabajador) }}
+                </div>
+                <div class="user-cell-info">
+                  <span class="user-cell-name">{{ a.NombreTrabajador }}</span>
+                  <span class="user-cell-id">{{ a.CedulaTrabajador }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="td-muted">{{ a.TablaAfectada || '—' }}</td>
+            <td>
+              <span class="badge-resultado"
+                    [ngClass]="a.Resultado === 'EXITOSO' ? 'exitoso' : 'fallido'">
+                {{ a.Resultado }}
+              </span>
+            </td>
+            <td class="td-descripcion">{{ a.Descripcion }}</td>
+            <td class="td-dispositivo">
+              <ng-container *ngIf="a.Dispositivo; else sinDispositivo">
+                <span class="dispositivo-nombre">
+                  {{ parsearDispositivo(a.Dispositivo).navegador }}
+                </span>
+                <span class="dispositivo-os">
+                  {{ parsearDispositivo(a.Dispositivo).os }}
+                </span>
+              </ng-container>
+              <ng-template #sinDispositivo>
+                <span class="td-muted">—</span>
+              </ng-template>
+            </td>
+          </tr>
+          <tr *ngIf="auditoriaPaginada.length === 0">
+            <td colspan="7" class="table-empty">Sin actividad registrada</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="paginacion">
+        <span class="pag-info">
+          Mostrando {{ auditoriaPaginada.length }} de
+          {{ auditoriaFiltrada.length }} registros
+        </span>
+        <div class="pag-btns">
+          <button (click)="paginaAuditoria = paginaAuditoria - 1"
+                  [disabled]="paginaAuditoria === 1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <button (click)="paginaAuditoria = paginaAuditoria + 1"
+                  [disabled]="paginaAuditoria === totalPaginasAuditoria">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
 </div>
 
@@ -556,7 +577,7 @@
   </div>
 </div>
 
-<!-- ← MODAL Eliminar FUERA del modal anterior -->
+<!-- MODAL Eliminar -->
 <div class="modal-overlay"
      *ngIf="mostrarConfirmEliminar"
      (click)="cerrarConfirmEliminar()">

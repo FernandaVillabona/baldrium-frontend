@@ -10,6 +10,7 @@ import {
 } from './usuarios.service';
 
 type ModalMode = 'crear' | 'editar' | null;
+type TabActivo = 'usuarios' | 'auditoria';
 
 @Component({
   selector:    'app-usuarios',
@@ -32,8 +33,8 @@ export class UsuariosComponent implements OnInit {
   eliminando    = false;
 
   // ── Mensajes de error ──────────────────────────────────────────────
-  error        = '';
-  errorModal   = '';
+  error         = '';
+  errorModal    = '';
   errorEliminar = '';
 
   // ── Paginación tabla usuarios ──────────────────────────────────────
@@ -53,17 +54,20 @@ export class UsuariosComponent implements OnInit {
   filtroOrden    = '';
 
   // ── Filtros auditoría ──────────────────────────────────────────────
-mostrarFiltrosAuditoria = false;
-filtroAudAccion         = '';
-filtroAudResultado      = '';
-filtroAudFechaDesde     = '';
-filtroAudFechaHasta     = '';
+  mostrarFiltrosAuditoria = false;
+  filtroAudAccion         = '';
+  filtroAudResultado      = '';
+  filtroAudFechaDesde     = '';
+  filtroAudFechaHasta     = '';
+
+  // ── Tab ───────────────────────────────────────────────────────────
+  tabActivo: TabActivo = 'usuarios';
 
   // ── Modal crear/editar ─────────────────────────────────────────────
-  modalMode:              ModalMode    = null;
-  trabajadorSeleccionado: Trabajador | null = null;
-  rolesSeleccionados:     number[]     = [];
-  form!:                  FormGroup;
+  modalMode:               ModalMode    = null;
+  trabajadorSeleccionado:  Trabajador | null = null;
+  rolesSeleccionados:      number[]     = [];
+  form!:                   FormGroup;
   mostrarConfirmDesactivar = false;
 
   // ── Modal eliminar ─────────────────────────────────────────────────
@@ -107,9 +111,17 @@ filtroAudFechaHasta     = '';
     });
 
     this.svc.listarAuditoria().subscribe({
-      next: (a) => this.auditoria = a,
-      error: () => {}
+      next:  (a) => this.auditoria = a,
+      error: ()  => {}
     });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  //  TAB
+  // ════════════════════════════════════════════════════════════════════
+
+  cambiarTab(tab: TabActivo): void {
+    this.tabActivo = tab;
   }
 
   // ════════════════════════════════════════════════════════════════════
@@ -137,57 +149,52 @@ filtroAudFechaHasta     = '';
   //  PAGINACIÓN — AUDITORÍA
   // ════════════════════════════════════════════════════════════════════
 
-get auditoriaFiltrada(): any[] {
-  let resultado = [...this.auditoria];
+  get auditoriaFiltrada(): any[] {
+    let resultado = [...this.auditoria];
 
-  // Búsqueda texto
-  const q = this.busquedaAuditoria.toLowerCase().trim();
-  if (q) {
-    resultado = resultado.filter(a =>
-      a.NombreTrabajador?.toLowerCase().includes(q) ||
-      a.TipoAccion?.toLowerCase().includes(q)       ||
-      a.Descripcion?.toLowerCase().includes(q)      ||
-      a.Resultado?.toLowerCase().includes(q)
-    );
+    const q = this.busquedaAuditoria.toLowerCase().trim();
+    if (q) {
+      resultado = resultado.filter(a =>
+        a.NombreTrabajador?.toLowerCase().includes(q) ||
+        a.TipoAccion?.toLowerCase().includes(q)       ||
+        a.Descripcion?.toLowerCase().includes(q)      ||
+        a.Resultado?.toLowerCase().includes(q)
+      );
+    }
+
+    if (this.filtroAudAccion) {
+      resultado = resultado.filter(a => a.TipoAccion === this.filtroAudAccion);
+    }
+
+    if (this.filtroAudResultado) {
+      resultado = resultado.filter(a => a.Resultado === this.filtroAudResultado);
+    }
+
+    if (this.filtroAudFechaDesde) {
+      const desde = new Date(this.filtroAudFechaDesde).getTime();
+      resultado = resultado.filter(a =>
+        new Date(a.FechaHora).getTime() >= desde
+      );
+    }
+
+    if (this.filtroAudFechaHasta) {
+      const hasta = new Date(this.filtroAudFechaHasta + 'T23:59:59').getTime();
+      resultado = resultado.filter(a =>
+        new Date(a.FechaHora).getTime() <= hasta
+      );
+    }
+
+    return resultado;
   }
 
-  // Filtro acción
-  if (this.filtroAudAccion) {
-    resultado = resultado.filter(a => a.TipoAccion === this.filtroAudAccion);
+  get filtrosAuditoriaActivos(): number {
+    return [
+      this.filtroAudAccion,
+      this.filtroAudResultado,
+      this.filtroAudFechaDesde,
+      this.filtroAudFechaHasta
+    ].filter(f => f !== '').length;
   }
-
-  // Filtro resultado
-  if (this.filtroAudResultado) {
-    resultado = resultado.filter(a => a.Resultado === this.filtroAudResultado);
-  }
-
-  // Filtro fecha desde
-  if (this.filtroAudFechaDesde) {
-    const desde = new Date(this.filtroAudFechaDesde).getTime();
-    resultado = resultado.filter(a =>
-      new Date(a.FechaHora).getTime() >= desde
-    );
-  }
-
-  // Filtro fecha hasta
-  if (this.filtroAudFechaHasta) {
-    const hasta = new Date(this.filtroAudFechaHasta + 'T23:59:59').getTime();
-    resultado = resultado.filter(a =>
-      new Date(a.FechaHora).getTime() <= hasta
-    );
-  }
-
-  return resultado;
-}
-
-get filtrosAuditoriaActivos(): number {
-  return [
-    this.filtroAudAccion,
-    this.filtroAudResultado,
-    this.filtroAudFechaDesde,
-    this.filtroAudFechaHasta
-  ].filter(f => f !== '').length;
-}
 
   get auditoriaPaginada(): any[] {
     const inicio = (this.paginaAuditoria - 1) * this.itemsAuditoriaPag;
@@ -257,19 +264,18 @@ get filtrosAuditoriaActivos(): number {
     this.aplicarFiltros();
   }
 
-
   toggleFiltrosAuditoria(): void {
-  this.mostrarFiltrosAuditoria = !this.mostrarFiltrosAuditoria;
-}
+    this.mostrarFiltrosAuditoria = !this.mostrarFiltrosAuditoria;
+  }
 
-limpiarFiltrosAuditoria(): void {
-  this.filtroAudAccion     = '';
-  this.filtroAudResultado  = '';
-  this.filtroAudFechaDesde = '';
-  this.filtroAudFechaHasta = '';
-  this.busquedaAuditoria   = '';
-  this.paginaAuditoria     = 1;
-}
+  limpiarFiltrosAuditoria(): void {
+    this.filtroAudAccion     = '';
+    this.filtroAudResultado  = '';
+    this.filtroAudFechaDesde = '';
+    this.filtroAudFechaHasta = '';
+    this.busquedaAuditoria   = '';
+    this.paginaAuditoria     = 1;
+  }
 
   // ════════════════════════════════════════════════════════════════════
   //  MODAL CREAR / EDITAR
@@ -301,10 +307,10 @@ limpiarFiltrosAuditoria(): void {
     this.errorModal              = '';
     this.mostrarConfirmDesactivar = false;
     this.form = this.fb.group({
-      nombre:            [t.nombre,   Validators.required],
+      nombre:            [t.nombre,  Validators.required],
       cedula:            [{ value: t.cedula, disabled: true }],
-      correoElectronico: [t.correo,   [Validators.required, Validators.email]],
-      celular:           [t.celular,  Validators.required],
+      correoElectronico: [t.correo,  [Validators.required, Validators.email]],
+      celular:           [t.celular, Validators.required],
       telefono:          [t.telefono],
       codigoTrabajador:  [t.codigoTrabajador],
       direccion:         [t.direccion],
@@ -468,55 +474,55 @@ limpiarFiltrosAuditoria(): void {
   }
 
   exportarAuditoriaPDF(): void {
-  import('jspdf').then(({ default: jsPDF }) => {
-    import('jspdf-autotable').then((autoTable) => {
-      const doc = new jsPDF({ orientation: 'landscape' });
+    import('jspdf').then(({ default: jsPDF }) => {
+      import('jspdf-autotable').then((autoTable) => {
+        const doc = new jsPDF({ orientation: 'landscape' });
 
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Baldrium Group S.A.S', 14, 20);
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Historial de Actividad del Sistema', 14, 28);
-      doc.text(`Generado: ${new Date().toLocaleDateString('es-CO')}`, 14, 34);
-      doc.text(`Total registros: ${this.auditoriaFiltrada.length}`, 14, 40);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Baldrium Group S.A.S', 14, 20);
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Historial de Actividad del Sistema', 14, 28);
+        doc.text(`Generado: ${new Date().toLocaleDateString('es-CO')}`, 14, 34);
+        doc.text(`Total registros: ${this.auditoriaFiltrada.length}`, 14, 40);
 
-      autoTable.default(doc, {
-        head: [['Fecha y Hora', 'Acción', 'Trabajador', 'Cédula', 'Módulo', 'Resultado', 'Descripción']],
-        body: this.auditoriaFiltrada.map(a => [
-          this.formatearFecha(a.FechaHora),
-          a.TipoAccion,
-          a.NombreTrabajador,
-          a.CedulaTrabajador,
-          a.TablaAfectada || '—',
-          a.Resultado,
-          a.Descripcion
-        ]),
-        startY:     48,
-        theme:      'grid',
-        headStyles: {
-          fillColor: [15, 25, 35],
-          textColor: 255,
-          fontStyle: 'bold',
-          fontSize:  8
-        },
-        bodyStyles:         { fontSize: 7 },
-        alternateRowStyles: { fillColor: [248, 249, 251] },
-        columnStyles: {
-          0: { cellWidth: 35 },
-          1: { cellWidth: 30 },
-          2: { cellWidth: 35 },
-          3: { cellWidth: 28 },
-          4: { cellWidth: 28 },
-          5: { cellWidth: 22 },
-          6: { cellWidth: 'auto' }
-        }
+        autoTable.default(doc, {
+          head: [['Fecha y Hora', 'Acción', 'Trabajador', 'Cédula', 'Módulo', 'Resultado', 'Descripción']],
+          body: this.auditoriaFiltrada.map(a => [
+            this.formatearFecha(a.FechaHora),
+            a.TipoAccion,
+            a.NombreTrabajador,
+            a.CedulaTrabajador,
+            a.TablaAfectada || '—',
+            a.Resultado,
+            a.Descripcion
+          ]),
+          startY:     48,
+          theme:      'grid',
+          headStyles: {
+            fillColor: [15, 25, 35],
+            textColor: 255,
+            fontStyle: 'bold',
+            fontSize:  8
+          },
+          bodyStyles:         { fontSize: 7 },
+          alternateRowStyles: { fillColor: [248, 249, 251] },
+          columnStyles: {
+            0: { cellWidth: 35 },
+            1: { cellWidth: 30 },
+            2: { cellWidth: 35 },
+            3: { cellWidth: 28 },
+            4: { cellWidth: 28 },
+            5: { cellWidth: 22 },
+            6: { cellWidth: 'auto' }
+          }
+        });
+
+        doc.save(`auditoria-baldrium-${new Date().toISOString().slice(0,10)}.pdf`);
       });
-
-      doc.save(`auditoria-baldrium-${new Date().toISOString().slice(0,10)}.pdf`);
     });
-  });
-}
+  }
 
   // ════════════════════════════════════════════════════════════════════
   //  HELPERS
@@ -567,26 +573,24 @@ limpiarFiltrosAuditoria(): void {
   }
 
   parsearDispositivo(userAgent: string): { navegador: string; os: string } {
-  if (!userAgent || userAgent === 'localhost') {
-    return { navegador: 'Desconocido', os: 'localhost' };
+    if (!userAgent || userAgent === 'localhost') {
+      return { navegador: 'Desconocido', os: 'localhost' };
+    }
+
+    let os = 'Desconocido';
+    if (userAgent.includes('Windows NT'))  os = 'Windows 10/11';
+    else if (userAgent.includes('Mac OS')) os = 'macOS';
+    else if (userAgent.includes('Android'))os = 'Android';
+    else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) os = 'iOS';
+    else if (userAgent.includes('Linux'))  os = 'Linux';
+
+    let navegador = 'Desconocido';
+    if (userAgent.includes('Edg/'))        navegador = 'Edge';
+    else if (userAgent.includes('OPR/') || userAgent.includes('Opera')) navegador = 'Opera';
+    else if (userAgent.includes('Chrome')) navegador = 'Chrome';
+    else if (userAgent.includes('Firefox'))navegador = 'Firefox';
+    else if (userAgent.includes('Safari')) navegador = 'Safari';
+
+    return { navegador, os };
   }
-
-  // OS
-  let os = 'Desconocido';
-  if (userAgent.includes('Windows NT'))  os = 'Windows 10/11';
-  else if (userAgent.includes('Mac OS')) os = 'macOS';
-  else if (userAgent.includes('Android'))os = 'Android';
-  else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) os = 'iOS';
-  else if (userAgent.includes('Linux'))  os = 'Linux';
-
-  // Navegador
-  let navegador = 'Desconocido';
-  if (userAgent.includes('Edg/'))        navegador = 'Edge';
-  else if (userAgent.includes('OPR/') || userAgent.includes('Opera')) navegador = 'Opera';
-  else if (userAgent.includes('Chrome')) navegador = 'Chrome';
-  else if (userAgent.includes('Firefox'))navegador = 'Firefox';
-  else if (userAgent.includes('Safari')) navegador = 'Safari';
-
-  return { navegador, os };
-}
 }

@@ -35,7 +35,7 @@ export interface LoginResponse {
 
 // Permisos por módulo
 const PERMISOS: Record<RolUsuario, string[]> = {
-  'Director':                ['usuarios','inventario','telemercadeo','beneficios','auditoria'], //usuarios
+  'Director':                ['usuarios','auditoria'], //usuarios
   'Coordinador':             ['inventario'], // inventario
   'Auxiliar Administrativo': ['beneficios','telemercadeo'], //Validar beneficios y Validar compras - diferentes vistas
   'Asesor comercial':        ['telemercadeo','beneficios'], //clientes, compras
@@ -68,7 +68,7 @@ export class AuthService {
       );
   }
 
-  
+
 
   // ── Olvidé contraseña ─────────────────────────────────────────────
   olvideMiContrasena(correo: string): Observable<{ mensaje: string }> {
@@ -139,5 +139,5 @@ export class AuthService {
   this.usuarioSubject.next(actualizado);
 }
 
-  
+
 }
