@@ -16,7 +16,6 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Usuarios',     ruta: '/usuarios',    icono: 'users',     roles: ['Director'] },
   { label: 'Visitas',     ruta: '/clientes',    icono: 'clientes',  roles: ['Director','Coordinador','Auxiliar Administrativo','Asesor comercial'] },
   { label: 'Inventario',   ruta: '/inventario',  icono: 'inventory', roles: ['Director','Coordinador'] },
-  { label: 'Visitas',      ruta: '/visitas',     icono: 'visitas',   roles: ['Director','Coordinador','Asesor comercial','Telemercaderista'] },
   { label: 'Compras',      ruta: '/compras',     icono: 'compras',   roles: ['Director','Coordinador','Asesor comercial'] },
   { label: 'Telemercadeo', ruta: '/telemercadeo',icono: 'phone',     roles: ['Director','Coordinador','Auxiliar Administrativo','Asesor comercial','Telemercaderista'] },
   { label: 'Beneficios',   ruta: '/beneficios',  icono: 'gift',      roles: ['Director','Coordinador','Auxiliar Administrativo','Asesor comercial'] },

@@ -36,7 +36,7 @@ export interface LoginResponse {
 // Permisos por módulo
 const PERMISOS: Record<RolUsuario, string[]> = {
   'Director':                ['usuarios','inventario','telemercadeo','beneficios','auditoria'], //usuarios
-  'Coordinador':             ['inventario','telemercadeo','beneficios'], // inventario
+  'Coordinador':             ['inventario'], // inventario
   'Auxiliar Administrativo': ['beneficios','telemercadeo'], //Validar beneficios y Validar compras - diferentes vistas
   'Asesor comercial':        ['telemercadeo','beneficios'], //clientes, compras
   'Telemercaderista':        ['telemercadeo'] //contactos y beneficios

@@ -8,7 +8,16 @@ import {
   FormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService, RolUsuario } from '../../../core/services/auth.service';
+
+// ── Mapa de primera ruta disponible por rol ───────────────────────────
+const RUTA_POR_ROL: Record<RolUsuario, string> = {
+  'Director':                '/usuarios',
+  'Coordinador':             '/inventario',
+  'Auxiliar Administrativo': '/telemercadeo',  // pantalla pendiente → redirige a telemercadeo por ahora
+  'Asesor comercial':        '/clientes',
+  'Telemercaderista':        '/telemercadeo'   // pantalla pendiente → redirige a telemercadeo por ahora
+};
 
 @Component({
   selector: 'app-login',
@@ -24,7 +33,6 @@ export class LoginComponent implements OnInit {
   error       = '';
   mostrarPass = false;
 
-  // Estado del modal "olvidé contraseña"
   mostrarModalOlvide  = false;
   correoRecuperacion  = '';
   enviandoCorreo      = false;
@@ -39,15 +47,23 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.auth.estaAutenticado()) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate([this.getRutaInicial()]);
       return;
     }
 
     this.form = this.fb.group({
       cedula:     ['', [Validators.required]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]]
-      //           ↑ "contrasena" igual que el backend
     });
+  }
+
+  // ── Primera ruta disponible según rol principal ───────────────────
+  private getRutaInicial(): string {
+    const roles = this.auth.getRoles();
+    for (const rol of roles) {
+      if (RUTA_POR_ROL[rol]) return RUTA_POR_ROL[rol];
+    }
+    return '/dashboard';
   }
 
   onSubmit(): void {
@@ -59,11 +75,10 @@ export class LoginComponent implements OnInit {
     this.auth.login(this.form.value).subscribe({
       next: () => {
         this.cargando = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate([this.getRutaInicial()]);
       },
       error: (err: any) => {
         this.cargando = false;
-        // El backend devuelve { error: '...' } no { message: '...' }
         this.error =
           err?.error?.error ||
           err?.error?.message ||
@@ -72,7 +87,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // ── Olvidé contraseña ──────────────────────────────────────────────
+  // ── Olvidé contraseña ─────────────────────────────────────────────
   abrirModalOlvide(): void {
     this.mostrarModalOlvide  = true;
     this.correoRecuperacion  = '';
@@ -80,9 +95,7 @@ export class LoginComponent implements OnInit {
     this.errorRecuperacion   = '';
   }
 
-  cerrarModalOlvide(): void {
-    this.mostrarModalOlvide = false;
-  }
+  cerrarModalOlvide(): void { this.mostrarModalOlvide = false; }
 
   enviarRecuperacion(): void {
     if (!this.correoRecuperacion || !this.correoRecuperacion.includes('@')) {
@@ -101,8 +114,6 @@ export class LoginComponent implements OnInit {
       },
       error: (err: any) => {
         this.enviandoCorreo      = false;
-        // El backend devuelve 200 incluso con error por seguridad,
-        // pero por si acaso manejamos el error HTTP
         this.mensajeRecuperacion =
           err?.error?.mensaje ||
           'Si el correo existe en el sistema, recibirás las instrucciones en breve.';
